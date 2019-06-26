@@ -1,0 +1,5 @@
+{
+  "login": "https://api.thetvdb.com/login",
+  "search": "https://api.thetvdb.com/search/series",
+  "series": "https://api.thetvdb.com/series"
+}

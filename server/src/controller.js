@@ -1,5 +1,8 @@
+import fileSystem from 'fs';
 import request from 'request';
 import Show from './model';
+
+const tvdbUrls = JSON.parse(fileSystem.readFileSync('./tvdbroutes.json'));
 
 // MONGO routes
 
@@ -53,7 +56,7 @@ export async function listShows(req, res) {
 async function getBearerToken() {
   return new Promise((resolve, reject) => {
     request.post(
-      'https://api.thetvdb.com/login',
+      tvdbUrls.login,
       {
         json: {
           apikey: process.env.TVDB_API_KEY,
@@ -80,7 +83,7 @@ export async function findShow(req, res) {
   }
 
   request.get(
-    'https://api.thetvdb.com/search/series',
+    tvdbUrls.search,
     {
       qs: {
         name: req.query.name,
@@ -104,7 +107,7 @@ async function getShowOrEpisodeInfo(queryId, options) {
 
   return new Promise((resolve, reject) => {
     request.get(
-      `https://api.thetvdb.com/series/${queryId}${options.provideEpisodeDetail ? '/episodes' : ''}`,
+      `${tvdbUrls.series}/${queryId}${options.provideEpisodeDetail ? '/episodes' : ''}`,
       {
         auth: {
           bearer: bearerToken,

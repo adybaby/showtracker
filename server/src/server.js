@@ -1,22 +1,23 @@
-import Express from 'express';
-import Mongoose from 'mongoose';
+import express from 'express';
+import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
-import Routes from './routes';
+import routes from './routes';
 
-const app = Express();
+const app = express();
 const port = process.env.PORT || 3000;
 
 // mongoose instance connection url connection
-Mongoose.Promise = global.Promise;
-Mongoose.connect('mongodb://localhost:27017/showtracker', {
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost:27017/showtracker', {
   useNewUrlParser: true,
 });
 
+// bodyparser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// routes
+routes(app);
 
-// importing route
-Routes(app); // register the route
-
+// start
 app.listen(port);
