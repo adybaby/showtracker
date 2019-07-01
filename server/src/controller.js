@@ -4,9 +4,16 @@ import Show from './model';
 
 const tvdbUrls = JSON.parse(fileSystem.readFileSync('./tvdbroutes.json'));
 
+function addCorsExceptions(res) {
+  // adding CORS global exceptiion because stupid Chrome doesn't allow localhost exceptions
+  res.header('Access-Control-Allow-Origin', '*');
+}
+
 // MONGO routes
 
 export function addShow(req, res) {
+  addCorsExceptions(res);
+
   new Show(req.query).save((err, show) => {
     if (err) {
       res.send(err.message);
@@ -17,6 +24,8 @@ export function addShow(req, res) {
 }
 
 export function removeShow(req, res) {
+  addCorsExceptions(res);
+
   Show.deleteOne(
     {
       id: req.query.id,
@@ -25,7 +34,7 @@ export function removeShow(req, res) {
       if (err) {
         res.send(err);
       } else {
-        res.json({ message: `Show ${req.query.id} removed` });
+        res.json(req.query.id);
       }
     },
   );
@@ -44,6 +53,8 @@ async function getShowList() {
 }
 
 export async function listShows(req, res) {
+  addCorsExceptions(res);
+
   try {
     res.json(await getShowList());
   } catch (err) {
@@ -75,6 +86,8 @@ async function getBearerToken() {
 
 export async function findShow(req, res) {
   let bearerToken;
+
+  addCorsExceptions(res);
 
   try {
     bearerToken = await getBearerToken();
@@ -124,14 +137,18 @@ async function getShowOrEpisodeInfo(queryId, options) {
 }
 
 export async function showInfo(req, res) {
+  addCorsExceptions(res);
+
   try {
-    res.json(await getShowOrEpisodeInfo(req.query.id, { provideEpisodeDetail: true }));
+    res.json(await getShowOrEpisodeInfo(req.query.id, { provideEpisodeDetail: false }));
   } catch (err) {
     res.send(err.message);
   }
 }
 
 export async function episodeInfo(req, res) {
+  addCorsExceptions(res);
+
   try {
     res.json(await getShowOrEpisodeInfo(req.query.id, { provideEpisodeDetail: true }));
   } catch (err) {
@@ -186,6 +203,8 @@ async function makeShowCalendar() {
 }
 
 export async function getShowCalendar(req, res) {
+  addCorsExceptions(res);
+
   try {
     res.json(await makeShowCalendar());
   } catch (err) {
@@ -196,7 +215,7 @@ export async function getShowCalendar(req, res) {
 /**
   this version groups and sorts shows, but i'm not sure the client will need it
 
-  async function getShowCalendar() {
+  async function makeShowCalendar() {
   return new Promise(async (resolve, reject) => {
     try {
       const showList = await getShowList();

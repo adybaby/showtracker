@@ -1,0 +1,35 @@
+02 july 2019 - building a basic client for server
+-------------------------------------------------
+
+starting off, just want to get my mongo showlist to display..
+
+i want to display show banners, which have urls embedded in the JSON tvdb response. tested a response URL i the browser to get just the banner, and got an authorisation issue.  have no idea how i'm going to resolve this from the client (which does not authorise directly with TVDB, due to CORS issues on the TVDB server).. problem for later.  i'll just try and list the show names and ids instead.
+
+following this tutorial for basic boilerplate that i can then edit:
+https://pusher.com/tutorials/consume-restful-api-react
+(and referencing this https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
+
+was getting an empty list back and couldn't work out why.  put console logs in but nothing displayed. couldn't work out why console log on vscode not showing anything - finally realised it shows in the browser dev tools console, so istalled react dev tools extesion in chrome, and found the console there.
+
+discovered in cconsole that its CORS messing me up again - didn't think it would be a problem from same IP, but it cares about port too >:( so had to learn all of this:
+https://medium.com/@xinganwang/a-practical-guide-to-cors-51e8fd329a1f
+
+added methods in server to add cors exceptions to responses (though chrome doesn't allow localhost so had to do *)
+
+web app now displays shows correctly, so time to learn about react components..
+https://reactjs.org/docs/components-and-props.html
+https://scotch.io/tutorials/create-a-simple-to-do-app-with-react
+https://reactjs.org/docs/refs-and-the-dom.html
+
+realised i couldn't pass query params with fetch and have to construct the URL manually - this had me stuck for ages. finally added console logs in the server to work out what was going on, then removed them.
+https://github.com/github/fetch/issues/256
+
+boilerplate used array.prototype.filter and array.prototype.map so had to learn those
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
+
+in ShowList component, had to do  // eslint-disable-next-line jsx-a11y/anchor-is-valid on an <a> ref on a button-not-a-button.. need to work out accessible way of doing this..
+
+got everything work for show list. now to remove the anchor issue.. that was easy, just changed it to a button. that's it for today, time to upload to git.
+
+
