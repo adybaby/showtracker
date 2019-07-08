@@ -32,7 +32,7 @@ in ShowList component, had to do  // eslint-disable-next-line jsx-a11y/anchor-is
 
 got everything work for show list. now to remove the anchor issue.. that was easy, just changed it to a button. that's it for today, time to upload to git.
 
-9 july 2019 - writing an add show popup which searches for shows and lets you add them
+8 july 2019 - writing an add show popup which searches for shows and lets you add them
 --------------------------------------------------------------------------------------
 
 going to write a popup which allows users to search for shows and add them.
