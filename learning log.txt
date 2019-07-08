@@ -32,4 +32,77 @@ in ShowList component, had to do  // eslint-disable-next-line jsx-a11y/anchor-is
 
 got everything work for show list. now to remove the anchor issue.. that was easy, just changed it to a button. that's it for today, time to upload to git.
 
+9 july 2019 - writing an add show popup which searches for shows and lets you add them
+--------------------------------------------------------------------------------------
+
+going to write a popup which allows users to search for shows and add them.
+
+first need to understand popups.  using this example:
+https://codepen.io/bastianalbers/pen/PWBYvz?editors=0010
+
+(the example code extends react component and uses render.. whereas my previous components expose a constant which doesn't have state, just jsx, and is passed the handlers for all interactions.. i don't really know what the difference is so for now i'm changing the rendering to just a const to be the same as the others)
+
+Getting "ReactJS: Maximum update depth exceeded error".. looking up
+https://stackoverflow.com/questions/48497358/reactjs-maximum-update-depth-exceeded-error
+
+think there's a problem with the line in the popup component which is:
+        <button onClick={closePopup()}>Done</button>
+for reasons i don't understand, even though i think i'm only calling that function when the button is clicked, it's still being called on rendering, ad infinitum. no idea why.
+fixed it by changing the line to
+        <button onClick={closePopup}>Done</button>
+if i want to pass parameters, i need to do:
+	<button onClick={(event) => closePopup(event, myParam)}>Done</button>
+-or-
+	<button onClick={(event) => {
+             // set the value of myParam
+             closePopup(event, myParam)
+         }>Done</button>
+again, not sure why.
+
+seems to be working now, but this method:
+
+  togglePopup() {
+    console.log("at start of function, showPopup is" + this.state.showPopup);
+    this.setState({
+      showPopup: !this.state.showPopup
+    });
+    console.log(
+      "after setting state, showpopup is now " + this.state.showPopup
+    );
+  }
+
+(whilst we're here, I also don't understand why I can't do 'showPopup is ${this.state.showPopup}' here, like I do in the node server)
+
+on click to show popup the output to console is this:
+at start of function, showPopup is false
+after setting state, showpopup is now false
+
+on click to hide popup the output to console is this:
+at start of function, showPopup is true
+after setting state, showpopup is now true
+
+I *think* it's to do with the fact that the setstate thing is guaranteed to call when i call it, rather it batches things up to optimise.. either way, it makes debugging take lots longer!
+
+I think I see the issue with having my component as just a constant returning JSX now rather than something which extends a react component.  I need to adapt my popup to uses a list shows component but with a different state to the main app.  The main app has a show state of the shows I have "favourited" but the find shows popup needs to have a state of "the shows i have searched for".  
+
+converted to a class, now i'm not sure where to set local variables in a react component. reading this:
+https://stackoverflow.com/questions/47417217/where-to-declare-variable-in-react-js
+i need to set it in the constructor like this:
+    constructor(props) {
+        super(props);
+        this.input = "";
+    }
+
+after more bug fixing, finally got the popup working, searching for shows, and adding them.
+
+Next problem is that if the list is too long, it goes off the bottom of the page with no scroll bar.
+
+Have managed to fix the problem ish - the CSS of the popup is absolute and fixed, and does not scroll within the page.  I removed the absolute nature of it.  Now getting formatting issues, but at least I can see and select all listed shows now.  Formatting problems are for another day..
+
+Whilst the results list is wating for results to return, it says "no shows found".  I only want it to say no shows found when it has returned.  Don't know how to do this..
+
+Last thing for today - used reactstrap to get container layouts to put an appbar and a stub for the calendar.
+
+
+
 

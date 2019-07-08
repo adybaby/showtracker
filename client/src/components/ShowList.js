@@ -1,12 +1,12 @@
 import React from "react";
 
-const Show = ({ show, remove }) => {
-  // Each Todo
+const Show = ({ show, handleShowClicked }) => {
+  // Each Show
   return (
     <button
       className="list-group-item"
       onClick={() => {
-        remove(show.id);
+        handleShowClicked(show.id, show.name);
       }}
     >
       {show.name} ({show.id})
@@ -14,13 +14,29 @@ const Show = ({ show, remove }) => {
   );
 };
 
-const ShowList = ({ showList, remove }) => {
-  // Map through the todos
-  const showMap = showList.map((show) => {
-    return (<Show show={show} key={show.id} remove={remove}/>)
-  });
+const ShowList = ({ showList, handleShowClicked, noShowsMessage }) => {
+  // Map through the show
+  let showMap = [];
 
-  return (<div className="list-group" style={{marginTop:'30px'}}>{showMap}</div>);
+  if (typeof showList !== "undefined" && showList.length > 0) {
+    showMap = showList.map(show => {
+      return (
+        <Show show={show} key={show.id} handleShowClicked={handleShowClicked} />
+      );
+    });
+  } else {
+    return (
+      <div className="list-group" style={{ marginTop: "30px" }}>
+        {noShowsMessage}
+      </div>
+    );
+  }
+
+  return (
+    <div className="list-group" style={{ marginTop: "30px" }}>
+      {showMap}
+    </div>
+  );
 };
 
 export default ShowList;
