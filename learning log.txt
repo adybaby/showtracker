@@ -1,4 +1,4 @@
-02 july 2019 - building a basic client for server
+1 july 2019 - building a basic client for server
 -------------------------------------------------
 
 starting off, just want to get my mongo showlist to display..
