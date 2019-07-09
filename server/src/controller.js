@@ -158,7 +158,7 @@ export async function episodeInfo(req, res) {
 
 function makeEpisodeSummary(episode, showName) {
   const episodeSummary = {};
-  episodeSummary.id = episode.id;
+  episodeSummary.key = episode.id;
   episodeSummary.episodeName = episode.episodeName;
   episodeSummary.shortName = `S${`0${episode.airedSeason}`.slice(-2)}E${`0${
     episode.airedEpisodeNumber
@@ -169,19 +169,25 @@ function makeEpisodeSummary(episode, showName) {
   return episodeSummary;
 }
 
-async function makeShowCalendar() {
+async function makeShowCalendar(futureOnly) {
+  console.log(futureOnly);
   return new Promise(async (resolve, reject) => {
     try {
       const showList = await getShowList();
       let episodeList;
       const allEpisodes = [];
 
-      /* eslint-disable no-await-in-loop */
       for (const show of showList) {
+        // eslint-disable-next-line no-await-in-loop
         episodeList = (await getShowOrEpisodeInfo(show.id, { provideEpisodeDetail: true })).data;
         for (const episode of episodeList) {
           if (episode.airedSeason !== 0) {
-            allEpisodes.push(makeEpisodeSummary(episode, show.name));
+            if (
+              futureOnly === 'false'
+              || (futureOnly === 'true' && new Date(episode.firstAired) >= new Date())
+            ) {
+              allEpisodes.push(makeEpisodeSummary(episode, show.name));
+            }
           }
         }
       }
@@ -206,67 +212,8 @@ export async function getShowCalendar(req, res) {
   addCorsExceptions(res);
 
   try {
-    res.json(await makeShowCalendar());
+    res.json(await makeShowCalendar(req.query.futureOnly));
   } catch (err) {
     res.send(err.message);
   }
 }
-
-/**
-  this version groups and sorts shows, but i'm not sure the client will need it
-
-  async function makeShowCalendar() {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const showList = await getShowList();
-      var episodeList, episodeSummary;
-      var allEpisodes = [];
-      var episodesGroupedByDate = {};
-
-      var allEpisodesIndex =0;
-
-      for (const show of showList) {
-        episodeList = (await getShowOrEpisodeInfo(show.id, true)).data;
-        for (const episode of episodeList) {
-          if (episode.airedSeason != "0") {
-            episodeSummary = makeEpisodeSummary(episode, show.name);
-
-            if (
-               episodesGroupedByDate[episodeSummary.firstAired] ==
-              null
-            ) {
-              episodesGroupedByDate[episodeSummary.firstAired] = allEpisodesIndex;
-              allEpisodes[allEpisodesIndex++] = [episodeSummary];
-            } else {
-              allEpisodes[episodesGroupedByDate[episodeSummary.firstAired]].push(episodeSummary);
-            }
-          }
-        }
-      }
-
-      //sort the date list
-      allEpisodes.sort((a, b) => {
-        var dateA = new Date(a[0].firstAired),
-          dateB = new Date(b[0].firstAired);
-       return dateA - dateB;
-      });
-
-      //sort the episodes in the date list
-      for(var episodesOnThisDay of allEpisodes)
-      {
-        episodesOnThisDay.sort((a, b) => {
-          var dateA = new Date(a.firstAired),
-            dateB = new Date(b.firstAired);
-
-          return a.firstAired === b.firstAired
-            ? a.airedEpisodeNumber - b.airedEpisodeNumber
-           : dateA - dateB;
-        });
-      }
-
-      resolve(allEpisodes);
-    } catch (err) {
-      reject(err);
-    }
-  });
-} */

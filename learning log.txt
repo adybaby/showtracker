@@ -1,4 +1,4 @@
-02 july 2019 - building a basic client for server
+01 july 2019 - building a basic client for server
 -------------------------------------------------
 
 starting off, just want to get my mongo showlist to display..
@@ -32,7 +32,7 @@ in ShowList component, had to do  // eslint-disable-next-line jsx-a11y/anchor-is
 
 got everything work for show list. now to remove the anchor issue.. that was easy, just changed it to a button. that's it for today, time to upload to git.
 
-9 july 2019 - writing an add show popup which searches for shows and lets you add them
+08 july 2019 - writing an add show popup which searches for shows and lets you add them
 --------------------------------------------------------------------------------------
 
 going to write a popup which allows users to search for shows and add them.
@@ -102,6 +102,19 @@ Have managed to fix the problem ish - the CSS of the popup is absolute and fixed
 Whilst the results list is wating for results to return, it says "no shows found".  I only want it to say no shows found when it has returned.  Don't know how to do this..
 
 Last thing for today - used reactstrap to get container layouts to put an appbar and a stub for the calendar.
+
+09 july 2019 - make column sizing responsive and add checkbox to show future dates
+----------------------------------------------------------------------------------
+
+for responsiveness, followed this link:
+https://stackoverflow.com/questions/24175998/meaning-of-numbers-in-col-md-4-col-xs-1-col-lg-2-in-bootstrap
+
+for checkbox, these:
+https://www.w3schools.com/js/js_date_methods.asp
+https://codepen.io/dsabalete/pen/jAzLpA
+
+now have an issue where checkbox gets out of sync.  it's 23:27 now though, so i'll look at this another day.
+
 
 
 

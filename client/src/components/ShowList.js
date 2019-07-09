@@ -16,15 +16,14 @@ const Show = ({ show, handleShowClicked }) => {
 
 const ShowList = ({ showList, handleShowClicked, noShowsMessage }) => {
   // Map through the show
-  let showMap = [];
+  let showJSX = [];
 
-  if (typeof showList !== "undefined" && showList.length > 0) {
-    showMap = showList.map(show => {
-      return (
-        <Show show={show} key={show.id} handleShowClicked={handleShowClicked} />
-      );
-    });
-  } else {
+    if (typeof showList !== "undefined" && showList.length > 0) {
+      for (const show of showList)
+      {
+        showJSX.push(<Show show={show} key={show.id} handleShowClicked={handleShowClicked} />);
+      };
+    } else {
     return (
       <div className="list-group" style={{ marginTop: "30px" }}>
         {noShowsMessage}
@@ -34,7 +33,7 @@ const ShowList = ({ showList, handleShowClicked, noShowsMessage }) => {
 
   return (
     <div className="list-group" style={{ marginTop: "30px" }}>
-      {showMap}
+      {showJSX}
     </div>
   );
 };

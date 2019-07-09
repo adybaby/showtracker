@@ -33,12 +33,12 @@ class App extends Component {
       <div>
         <Container fluid>
           <Row>
-            <Col xs={12} md={12}>
+            <Col>
               <AppBar title="Title" />
             </Col>
           </Row>
           <Row>
-            <Col xs={4} md={4}>
+            <Col xs={5} lg={3}>
               <Col>
                 <button onClick={this.togglePopup.bind(this)}>Add Shows</button>
 
@@ -51,7 +51,7 @@ class App extends Component {
                 />
               </Col>
             </Col>
-            <Col xs={8} md={8}>
+            <Col xs={7} lg={9}>
               <ShowCalendar />
             </Col>
           </Row>
