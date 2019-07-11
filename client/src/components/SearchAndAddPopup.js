@@ -20,7 +20,6 @@ class SearchAndAddPopup extends Component {
 
   handleSubmitSearch(event) {
     event.preventDefault();
-    console.log(this.state.resultsList);
     this.findShows(this.state.searchTerm);
   }
 
@@ -70,7 +69,6 @@ class SearchAndAddPopup extends Component {
   findShows(showName) {
     try {
       this.setState({ searching: true });
-      this.setState({ resultsList: [] });
       fetch("http://localhost:3000/findShow?name=" + showName)
         .then(data => {
           return data.json();
@@ -79,6 +77,7 @@ class SearchAndAddPopup extends Component {
           return JSON.parse(data.body);
         })
         .then(results => {
+          this.setState({ resultsList: [] });          
           if (typeof results.data != "undefined" && results.data.length > 0) {
             for (const show of results.data) {
               this.state.resultsList.push({

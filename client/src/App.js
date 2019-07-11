@@ -49,7 +49,7 @@ class App extends Component {
                 <button onClick={this.togglePopup.bind(this)}>Add Shows</button>
 
                 {this.state.showList.length < 1 ? (
-                  "No shows added.  Click Add Show above to add shows."
+                  <p>No shows added.  Click Add Show above to add shows.</p>
                 ) : (
                   <ShowList
                     showList={this.state.showList}
