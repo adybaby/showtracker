@@ -163,6 +163,46 @@ https://www.freecodecamp.org/news/react-changing-state-of-child-component-from-p
 
 now just for the event on return on adding shows..
 
+this code i boilerplated has been bothering me for a while.. i don't understand it's purpose
+
+  constructor(props) {
+    super(props);
+    this.input = "";
+  }
+  ...
+  <input
+    ref={node => {
+      this.input = node;
+    }}
+  />
+
+think the answer to both my problems is in using react forms..
+https://reactjs.org/docs/forms.html
+
+(also whilst i'm here, time to figure out the difference between state intialisation in a constructor and out of it)
+https://daveceddia.com/where-initialize-state-react/
+.. it's the same
+
+implemented it as a form..
+         <form onSubmit={this.handleSubmitSearch}>
+            <input
+              type="text"
+              value={this.state.value}
+              onChange={this.handleSearchTermChange}
+            />
+            <input type="submit" value="Search" />
+          </form>
+
+had to create a constructor to bind those methods.. not sure why for this and not for others.. must be to do with how the dom handles the event
+
+also had to add event.preventDefault() to prevent form from closing before a show is added.. done now though!
+
+found a bug where rapid tapping on submit causes multiple entries of same thing to appear in results.
+
+fixed it.. i needed to put the clear in the callback in the findshows method, not at the start of the findshows method
+
+next up for another day - a few bugs - one where i don't have unique keys in showlist, one where i can add duplicate shows, and one where closing the search popup without adding new shows still causes the showlist to update. 23:43 now though..
+
 
 
 

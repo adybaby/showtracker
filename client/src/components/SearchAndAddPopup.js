@@ -7,6 +7,7 @@ class SearchAndAddPopup extends Component {
     this.handleSearchTermChange = this.handleSearchTermChange.bind(this);
     this.handleSubmitSearch = this.handleSubmitSearch.bind(this);
   }
+
   state = {
     resultsList: [],
     searching: false,
@@ -27,7 +28,12 @@ class SearchAndAddPopup extends Component {
     var results;
     if (this.state.resultsList.length < 1) {
       if (this.state.doneFirstSearch === false) {
-        results = <div>Type the name of a show and hit search.</div>;
+        results = (
+          <div>
+            Type the name of a show and hit search. Click on a show to add it to
+            your list. Hit X to close this popup.
+          </div>
+        );
       } else if (this.state.searching === true) {
         results = <div>Searching..</div>;
       } else {
@@ -77,7 +83,7 @@ class SearchAndAddPopup extends Component {
           return JSON.parse(data.body);
         })
         .then(results => {
-          this.setState({ resultsList: [] });          
+          this.setState({ resultsList: [] });
           if (typeof results.data != "undefined" && results.data.length > 0) {
             for (const show of results.data) {
               this.state.resultsList.push({

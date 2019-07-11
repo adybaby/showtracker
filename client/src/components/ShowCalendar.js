@@ -140,17 +140,17 @@ class ShowCalendar extends Component {
                   Only show future air dates
                 </p>
               </Col>
-              <Col xs={5} lg={3}>
+              <Col xs={7} lg={7}>
                 <p>
                   <input
                     type="checkbox"
                     onChange={this.handleNextOnlyChange}
                     defaultChecked={this.state.showNexttOnly}
                   />
-                  Only show next episode
+                  Only show the first episode (or first to come, if only showing future episodes)
                 </p>
               </Col>
-              <Col xs={2} lg={6} />
+              <Col xs={0} lg={2} />
             </Row>
           </Container>
           {showList}

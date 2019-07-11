@@ -31,13 +31,13 @@ class App extends Component {
     this.setState({
       showPopup: !this.state.showPopup
     });
-    this.calendar.current.updateShowCalendar();      
+    this.calendar.current.updateShowCalendar();
   }
 
   render() {
     return (
       <div>
-        <Container fluid className="noPaddingContainer">
+        <Container fluid>
           <Row>
             <Col>
               <AppBar title="Title" />
@@ -49,7 +49,7 @@ class App extends Component {
                 <button onClick={this.togglePopup.bind(this)}>Add Shows</button>
 
                 {this.state.showList.length < 1 ? (
-                  <p>No shows added.  Click Add Show above to add shows.</p>
+                  <p>No shows added. Click Add Show above to add shows.</p>
                 ) : (
                   <ShowList
                     showList={this.state.showList}
@@ -101,7 +101,7 @@ class App extends Component {
             show => show.id !== removedShowId
           );
           this.setState({ showList: remainder });
-          this.calendar.current.updateShowCalendar();            
+          this.calendar.current.updateShowCalendar();
         });
     } catch (err) {
       console.log(err);
