@@ -169,8 +169,7 @@ function makeEpisodeSummary(episode, showName) {
   return episodeSummary;
 }
 
-async function makeShowCalendar(futureOnly) {
-  console.log(futureOnly);
+async function makeShowCalendar() {
   return new Promise(async (resolve, reject) => {
     try {
       const showList = await getShowList();
@@ -182,12 +181,7 @@ async function makeShowCalendar(futureOnly) {
         episodeList = (await getShowOrEpisodeInfo(show.id, { provideEpisodeDetail: true })).data;
         for (const episode of episodeList) {
           if (episode.airedSeason !== 0) {
-            if (
-              futureOnly === 'false'
-              || (futureOnly === 'true' && new Date(episode.firstAired) >= new Date())
-            ) {
-              allEpisodes.push(makeEpisodeSummary(episode, show.name));
-            }
+            allEpisodes.push(makeEpisodeSummary(episode, show.name));
           }
         }
       }

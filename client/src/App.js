@@ -13,6 +13,11 @@ class App extends Component {
     showPopup: false
   };
 
+  constructor(props) {
+    super(props);
+    this.calendar = React.createRef();
+  }
+
   componentDidMount() {
     fetch("http://localhost:3000/listShows")
       .then(res => res.json())
@@ -26,12 +31,13 @@ class App extends Component {
     this.setState({
       showPopup: !this.state.showPopup
     });
+    this.calendar.current.updateShowCalendar();      
   }
 
   render() {
     return (
       <div>
-        <Container fluid>
+        <Container fluid className="noPaddingContainer">
           <Row>
             <Col>
               <AppBar title="Title" />
@@ -42,17 +48,18 @@ class App extends Component {
               <Col>
                 <button onClick={this.togglePopup.bind(this)}>Add Shows</button>
 
-                <ShowList
-                  showList={this.state.showList}
-                  handleShowClicked={this.handleRemoveShow.bind(this)}
-                  noShowsMessage={
-                    "You haven't added any shows yet.  Click on Add Show to get started."
-                  }
-                />
+                {this.state.showList.length < 1 ? (
+                  "No shows added.  Click Add Show above to add shows."
+                ) : (
+                  <ShowList
+                    showList={this.state.showList}
+                    handleShowClicked={this.handleRemoveShow.bind(this)}
+                  />
+                )}
               </Col>
             </Col>
             <Col xs={7} lg={9}>
-              <ShowCalendar />
+              <ShowCalendar ref={this.calendar} />
             </Col>
           </Row>
         </Container>
@@ -94,6 +101,7 @@ class App extends Component {
             show => show.id !== removedShowId
           );
           this.setState({ showList: remainder });
+          this.calendar.current.updateShowCalendar();            
         });
     } catch (err) {
       console.log(err);

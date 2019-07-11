@@ -113,6 +113,55 @@ https://codepen.io/dsabalete/pen/jAzLpA
 
 now have an issue where checkbox gets out of sync.  it's 23:27 now though, so i'll look at this another day.
 
+11 july 2019 - fix problem with checkbox out of sync, look at performance
+-------------------------------------------------------------------------
+
+figured out how to use react debugger in chrome - it's awesome! makes debugging loads easier.
+changed server so that filtering is done client side, not conintually calling tvdb for a new showlist each time
+now, client caches complete showlist, and keeps also a filtered show list (which is rendered).
+changed method for filtering this list to accept two date ranges, in prep for changing controls to date filter, rather than just "show only future"
+fixed client such that filtered list does not depend on a state value which may or may not have yet been set
+show calendar now only calls tvdb on load, and filtering all client side - loads faster.
+fixed issue where empty episode names were blank - now says "Untitled"
+added a message to indicate when show calendar is being built, rather than a blank screen
+changed date format in showcalendar to dddd, dd mmmm, yyyy (added a date js file to do the date formatting, needed to do array lookups as the native Date class is a bit lacking)
+added a "only show next episode" filter, which filters out all the other episodes passed the first (next) in the list.  implemented a sort of mediator method to do the filtering based on the values of both check boxes, because it wasn't working at first due to the filtering being different based on the order you clicked the check boxes.
+omg, it's actually useful now..
+tried to convert showlist component into a class extending react component to have state, passing the state of app.js to the component to list the shows i've added - to deal with the problem where i can't tell if it's because the show hasn't rendered yet. ran into a problem where the state of app.js wasn't yet finished before componentdidmount was called, so state was always empty. 
+think i need to have the decision on whether or not the state is ready in the parent component, and have the showlist component dumb (maybe says "Loading.."- it knows that much).
+finally got the start message/searching/non found thing by putting this code in the parent component's render method:
+    var results;
+    if (this.state.resultsList.length < 1) {
+      if (this.state.doneFirstSearch === false) {
+        results = <div>Type the name of a show and hit search.</div>;
+      } else if (this.state.searching === true) {
+        results = <div>Searching..</div>;
+      } else {
+        results = <div>No shows found.</div>;
+      }
+    } else {
+      results = (
+        <ShowList
+          showList={this.state.resultsList}
+          handleShowClicked={this.props.handleShowClicked}
+        />
+      );
+    }
+
+.. and adding flags in the search method (handler for search click) to tell the state when it is searching/finished/not done a search yet... so i don't show the search list component if it is empty.
+
+two jobs needed now - attach event handler to hitting ENTER on search box (currently you have to click search), and refresh the calendar when shows are added/removed..
+
+.. on refreshing the calendar
+
+initially tried to get it working through passing in methods using bind() - couldn't really get it to work, and its application was confusing for me:
+https://stackoverflow.com/questions/39041710/react-js-change-child-components-state-from-parent-component/39041951
+https://stackoverflow.com/questions/2236747/use-of-the-javascript-bind-method
+
+finally gotting working using React.createref and calling update calendar in the child component, ensuring that the first thing that component does is clears its state, forcing the render method to show a "building calendar" message.  called that from closing the popup on add show (rather than each add show - to save on calls) and on remove show (since a show can be independently removed one by one)
+https://www.freecodecamp.org/news/react-changing-state-of-child-component-from-parent-8ab547436271/
+
+now just for the event on return on adding shows..
 
 
 
