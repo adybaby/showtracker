@@ -2,15 +2,26 @@ import React, { Component } from "react";
 import ShowList from "./ShowList";
 
 class SearchAndAddPopup extends Component {
+  constructor(props) {
+    super(props);
+    this.handleSearchTermChange = this.handleSearchTermChange.bind(this);
+    this.handleSubmitSearch = this.handleSubmitSearch.bind(this);
+  }
   state = {
     resultsList: [],
     searching: false,
-    doneFirstSearch: false
+    doneFirstSearch: false,
+    searchTerm: ""
   };
 
-  constructor(props) {
-    super(props);
-    this.input = "";
+  handleSearchTermChange(event) {
+    this.setState({ searchTerm: event.target.value });
+  }
+
+  handleSubmitSearch(event) {
+    event.preventDefault();
+    console.log(this.state.resultsList);
+    this.findShows(this.state.searchTerm);
   }
 
   render() {
@@ -41,22 +52,22 @@ class SearchAndAddPopup extends Component {
 
           <h1>Search for show</h1>
 
-          <input
-            ref={node => {
-              this.input = node;
-            }}
-          />
+          <form onSubmit={this.handleSubmitSearch}>
+            <input
+              type="text"
+              value={this.state.searchTerm}
+              onChange={this.handleSearchTermChange}
+            />
+            <input type="submit" value="Search" />
+          </form>
 
-          <button onClick={event => this.handleFindShow(this.input.value)}>
-            Search
-          </button>
           {results}
         </div>
       </div>
     );
   }
 
-  handleFindShow(showName) {
+  findShows(showName) {
     try {
       this.setState({ searching: true });
       this.setState({ resultsList: [] });
