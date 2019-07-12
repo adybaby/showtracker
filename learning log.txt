@@ -247,3 +247,9 @@ two things to address next: first, the popup which doesn't grow to accomodate a 
       );
     }
 
+re the popup not expanding on list, i kinda fixed it by putting the results in a div with styles
+.list {
+  height: 100%;
+  overflow-y:auto;
+}
+which works ish - the div is bigger than the popup now, and things i add after the popup are outside of it. no idea why, but that's cos i don't really understand the CSS.  that's prolly the next job.

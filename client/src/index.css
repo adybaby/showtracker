@@ -13,6 +13,7 @@ code {
 }
 
 .popup {
+  position: fixed;
   width: 100%;
   height: 100%;
   top: 0;
@@ -20,8 +21,8 @@ code {
   right: 0;
   bottom: 0;
   margin: auto;
+  background-color: rgba(0,0,0, 0.5);
 }
-
 .popup_inner {
   position: absolute;
   left: 25%;
@@ -30,6 +31,16 @@ code {
   bottom: 25%;
   margin: auto;
   background: white;
+}
+
+.list {
+  height: 100%;
+  overflow-y:auto;
+}
+
+.footer{
+  position: absolute;
+  bottom: 0;
 }
 
 .noPaddingContainer {

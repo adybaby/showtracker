@@ -109,13 +109,18 @@ export async function findShow(req, res) {
       if (err) {
         res.send(err.message);
       } else {
-        const shows = [];
-        for (const show of JSON.parse(tvdbRes.body).data) {
-          if (!show.seriesName.includes('403:')) {
-            shows.push({ id: show.id, name: show.seriesName });
+        const results = JSON.parse(tvdbRes.body).data;
+        if (typeof results === 'undefined') {
+          res.json(tvdbRes);
+        } else {
+          const shows = [];
+          for (const show of results) {
+            if (!show.seriesName.includes('403:')) {
+              shows.push({ id: show.id, name: show.seriesName });
+            }
           }
+          res.json(shows);
         }
-        res.json(shows);
       }
     },
   );

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import ShowList from "./ShowList";
+import { Container, Row, Col } from "reactstrap";
 
 class SearchAndAddPopup extends Component {
   constructor(props) {
@@ -14,6 +15,34 @@ class SearchAndAddPopup extends Component {
     doneFirstSearch: false,
     searchTerm: ""
   };
+
+  findShows(showName) {
+    try {
+      this.setState({ searching: true });
+      fetch("http://localhost:3000/findShow?name=" + showName)
+        .then(data => {
+          return data.json();
+        })
+        .then(results => {
+          this.setState({ resultsList: [] });
+          if (results.length > 0) {
+            for (const show of results) {
+              this.state.resultsList.push({
+                id: show.id,
+                name: show.name
+              });
+            }
+            this.setState(this.state);
+          }
+          this.setState({ searching: false });
+          this.setState({ doneFirstSearch: true });
+        });
+    } catch (err) {
+      this.setState({ searching: false });
+      this.setState({ doneFirstSearch: true });
+      console.log(err);
+    }
+  }
 
   handleSearchTermChange(event) {
     this.setState({ searchTerm: event.target.value });
@@ -55,7 +84,7 @@ class SearchAndAddPopup extends Component {
             X
           </button>
 
-          <h1>Search for show</h1>
+          <h1>Find and Add Shows</h1>
 
           <form onSubmit={this.handleSubmitSearch}>
             <input
@@ -66,38 +95,10 @@ class SearchAndAddPopup extends Component {
             <input type="submit" value="Search" />
           </form>
 
-          {results}
+          <div className="list">{results}</div>
         </div>
       </div>
     );
-  }
-
-  findShows(showName) {
-    try {
-      this.setState({ searching: true });
-      fetch("http://localhost:3000/findShow?name=" + showName)
-        .then(data => {
-          return data.json();
-        })
-        .then(results => {
-          this.setState({ resultsList: [] });
-          if (results.length > 0) {
-            for (const show of results) {
-              this.state.resultsList.push({
-                id: show.id,
-                name: show.name
-              });
-            }
-            this.setState(this.state);
-          }
-          this.setState({ searching: false });
-          this.setState({ doneFirstSearch: true });
-        });
-    } catch (err) {
-      this.setState({ searching: false });
-      this.setState({ doneFirstSearch: true });
-      console.log(err);
-    }
   }
 }
 

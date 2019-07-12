@@ -110,13 +110,13 @@ class App extends Component {
             </Col>
           </Row>
           <Row>
-            <Col xs={5} lg={3}>
+            <Col xs={5} lg={3} xl={2}>
               <Col>
                 <button onClick={this.togglePopup.bind(this)}>Add Shows</button>
                 {showList}
               </Col>
             </Col>
-            <Col xs={7} lg={9}>
+            <Col xs={7} lg={9} xl={10}>
               <ShowCalendar ref={this.calendar} />
             </Col>
           </Row>
