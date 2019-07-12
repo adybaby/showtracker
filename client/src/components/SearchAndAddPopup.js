@@ -79,16 +79,13 @@ class SearchAndAddPopup extends Component {
         .then(data => {
           return data.json();
         })
-        .then(data => {
-          return JSON.parse(data.body);
-        })
         .then(results => {
           this.setState({ resultsList: [] });
-          if (typeof results.data != "undefined" && results.data.length > 0) {
-            for (const show of results.data) {
+          if (results.length > 0) {
+            for (const show of results) {
               this.state.resultsList.push({
                 id: show.id,
-                name: show.seriesName
+                name: show.name
               });
             }
             this.setState(this.state);

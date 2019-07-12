@@ -8,7 +8,7 @@ class ShowCalendar extends Component {
     filteredShowCalendar: [],
     showFutureOnly: true,
     showNexttOnly: true,
-    noShowsAdded: false,
+    noShowsAdded: false
   };
 
   componentDidMount() {
@@ -16,7 +16,7 @@ class ShowCalendar extends Component {
   }
 
   updateShowCalendar() {
-    this.setState({showCalendar:[], filteredShowCalendar:[]});
+    this.setState({ showCalendar: [], filteredShowCalendar: [] });
     fetch("http://localhost:3000/getShowCalendar")
       .then(res => res.json())
       .then(data => {
@@ -93,7 +93,7 @@ class ShowCalendar extends Component {
 
   buildShowJSX(show) {
     return (
-      <p>
+      <p key={show.key}>
         {show.showName} (
         {show.episodeName == null ? "Untitled" : show.episodeName},{" "}
         {show.shortName}) airs on {Dates.formatDate(new Date(show.firstAired))}
@@ -116,7 +116,7 @@ class ShowCalendar extends Component {
         return (
           <div>
             <h3>Show Calendar</h3>
-            <p>Please wait whilst we build your show calendar..</p>
+            <p>Please wait whilst we fetch air dates from TVDB..</p>
             <p>{showList}</p>
           </div>
         );
@@ -147,7 +147,8 @@ class ShowCalendar extends Component {
                     onChange={this.handleNextOnlyChange}
                     defaultChecked={this.state.showNexttOnly}
                   />
-                  Only show the first episode (or first to come, if only showing future episodes)
+                  Only show the first episode (or first to come, if only showing
+                  future episodes)
                 </p>
               </Col>
               <Col xs={0} lg={2} />

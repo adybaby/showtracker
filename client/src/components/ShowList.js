@@ -1,11 +1,10 @@
 import React from "react";
 
 const Show = ({ show, handleShowClicked }) => {
-  // Each Show
   return (
     <button
       className="list-group-item"
-      onClick={() => {
+      onClick={() => {      
         handleShowClicked(show.id, show.name);
       }}
     >
@@ -15,7 +14,6 @@ const Show = ({ show, handleShowClicked }) => {
 };
 
 const ShowList = ({ showList, handleShowClicked }) => {
-  // Map through the show
   let showJSX = [];
 
   if (typeof showList !== "undefined" && showList.length > 0) {

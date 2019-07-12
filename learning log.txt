@@ -113,7 +113,7 @@ https://codepen.io/dsabalete/pen/jAzLpA
 
 now have an issue where checkbox gets out of sync.  it's 23:27 now though, so i'll look at this another day.
 
-11 july 2019 - fix problem with checkbox out of sync, look at performance
+11 july 2019 - fix problem with checkbox out of sync, look at performance (8hrs)
 -------------------------------------------------------------------------
 
 figured out how to use react debugger in chrome - it's awesome! makes debugging loads easier.
@@ -203,6 +203,47 @@ fixed it.. i needed to put the clear in the callback in the findshows method, no
 
 next up for another day - a few bugs - one where i don't have unique keys in showlist, one where i can add duplicate shows, and one where closing the search popup without adding new shows still causes the showlist to update. 23:43 now though..
 
+12 jul 2019 - fixing some bugs (5hrs)
 
+fixed the bug where showcalendar would update by changing the togglepopup to be
+    if (this.state.showAdded) {
+      this.setState({ showAdded: false });
+      this.calendar.current.updateShowCalendar();
+    }
+.. and setting state of showAdded to true in handleAddShow, if successful.
 
+fixed dupe shows - lloked here
+https://stackoverflow.com/questions/50371188/javascripts-includes-function-not-working-correctly-with-array-of-objects
+
+and implemented this before the fetch in handleaddshow
+
+const duplicate = this.state.showList.some(elem => {
+            return (
+              JSON.stringify({ id: show.id, name: show.name }) ===
+              JSON.stringify(elem)
+            );
+          });
+
+          if (!duplicate) {
+            this.state.showList.push({ id: show.id, name: show.name });
+            this.setState({ showAdded: true });
+          }
+this wasn't working. for some reason duplicate was false.  when i compared them, i found that somewhere, for some reason id was not wrapped in quotes from tvdb response, but wrapped in quotes everywhere else, after a couple hours of frigging around with console logging, react debugging, and json conversions, finally got it working.  something was doing typecasting somewhere.  my first taste of the problems with a non typesafe language.. stupid javascript.
+
+finally, after much ado, fixed the showcalendar not having a key issue, just by adding the key to each <p>. i thought it referred to the state data structure, but it's referring to the rendered array. got it.
+
+two things to address next: first, the popup which doesn't grow to accomodate a growing results list; and second, that "no shows added" is rendered in 2 circumstances: 1) where the showlist hasn't yet returned from fetch; 2) when no shows have been added.  i only want the message displayed in the second instance, but showlist does not have state.  wonder if i can use react ref again, so that the parent can tell the component when it has no shows.
+
+..nope, but adding this logic in app.js render got it working:
+    let showList = <p>Populating show list.."</p>
+    if (this.state.retrievedShows && this.state.showList.length < 1) {
+      showList = <p>No shows added. Click Add Show above to add shows.</p>
+    } else {
+      showList = (
+        <ShowList
+          showList={this.state.showList}
+          handleShowClicked={this.handleRemoveShow.bind(this)}
+        />
+      );
+    }
 

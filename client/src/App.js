@@ -10,7 +10,9 @@ class App extends Component {
   state = {
     showList: [],
     showCalendar: [],
-    showPopup: false
+    showPopup: false,
+    showAdded: false,
+    retrievedShows: false
   };
 
   constructor(props) {
@@ -22,7 +24,12 @@ class App extends Component {
     fetch("http://localhost:3000/listShows")
       .then(res => res.json())
       .then(data => {
-        this.setState({ showList: data });
+        const showIdsAndNames = [];
+        for (const show of data) {
+          showIdsAndNames.push({ id: show.id, name: show.name });
+        }
+        this.setState({ showList: showIdsAndNames });
+        this.setState({ retrievedShows: true });
       })
       .catch(console.log);
   }
@@ -31,62 +38,35 @@ class App extends Component {
     this.setState({
       showPopup: !this.state.showPopup
     });
-    this.calendar.current.updateShowCalendar();
-  }
-
-  render() {
-    return (
-      <div>
-        <Container fluid>
-          <Row>
-            <Col>
-              <AppBar title="Title" />
-            </Col>
-          </Row>
-          <Row>
-            <Col xs={5} lg={3}>
-              <Col>
-                <button onClick={this.togglePopup.bind(this)}>Add Shows</button>
-
-                {this.state.showList.length < 1 ? (
-                  <p>No shows added. Click Add Show above to add shows.</p>
-                ) : (
-                  <ShowList
-                    showList={this.state.showList}
-                    handleShowClicked={this.handleRemoveShow.bind(this)}
-                  />
-                )}
-              </Col>
-            </Col>
-            <Col xs={7} lg={9}>
-              <ShowCalendar ref={this.calendar} />
-            </Col>
-          </Row>
-        </Container>
-
-        {this.state.showPopup ? (
-          <SearchAndAddPopup
-            handleShowClicked={this.handleAddShow.bind(this)}
-            closePopup={this.togglePopup.bind(this)}
-          />
-        ) : null}
-      </div>
-    );
+    if (this.state.showAdded) {
+      this.setState({ showAdded: false });
+      this.calendar.current.updateShowCalendar();
+    }
   }
 
   handleAddShow(showId, showName) {
-    try {
-      fetch("http://localhost:3000/addShow?id=" + showId + "&name=" + showName)
-        .then(data => {
-          return data.json();
-        })
-        .then(show => {
-          console.log(show);
-          this.state.showList.push(show);
-          this.setState(this.state);
-        });
-    } catch (err) {
-      console.log(err);
+    const duplicate = this.state.showList.some(elem => {
+      return (
+        JSON.stringify({ id: showId.toString(), name: showName }) ===
+        JSON.stringify(elem)
+      );
+    });
+
+    if (!duplicate) {
+      try {
+        fetch(
+          "http://localhost:3000/addShow?id=" + showId + "&name=" + showName
+        )
+          .then(data => {
+            return data.json();
+          })
+          .then(show => {
+            this.state.showList.push({ id: show.id, name: show.name });
+            this.setState({ showAdded: true });
+          });
+      } catch (err) {
+        console.log(err);
+      }
     }
   }
 
@@ -106,6 +86,50 @@ class App extends Component {
     } catch (err) {
       console.log(err);
     }
+  }
+
+  render() {
+    let showList = <p>Populating show list.."</p>
+    if (this.state.retrievedShows && this.state.showList.length < 1) {
+      showList = <p>No shows added. Click Add Show above to add shows.</p>
+    } else {
+      showList = (
+        <ShowList
+          showList={this.state.showList}
+          handleShowClicked={this.handleRemoveShow.bind(this)}
+        />
+      );
+    }
+
+    return (
+      <div>
+        <Container fluid>
+          <Row>
+            <Col>
+              <AppBar title="Title" />
+            </Col>
+          </Row>
+          <Row>
+            <Col xs={5} lg={3}>
+              <Col>
+                <button onClick={this.togglePopup.bind(this)}>Add Shows</button>
+                {showList}
+              </Col>
+            </Col>
+            <Col xs={7} lg={9}>
+              <ShowCalendar ref={this.calendar} />
+            </Col>
+          </Row>
+        </Container>
+
+        {this.state.showPopup ? (
+          <SearchAndAddPopup
+            handleShowClicked={this.handleAddShow.bind(this)}
+            closePopup={this.togglePopup.bind(this)}
+          />
+        ) : null}
+      </div>
+    );
   }
 }
 
