@@ -113,12 +113,9 @@ export async function findShow(req, res) {
         if (typeof results === 'undefined') {
           res.json(tvdbRes);
         } else {
-          const shows = [];
-          for (const show of results) {
-            if (!show.seriesName.includes('403:')) {
-              shows.push({ id: show.id, name: show.seriesName });
-            }
-          }
+          const shows = results
+            .filter(result => !result.seriesName.includes('403:'))
+            .map(result => ({ id: result.id, name: result.seriesName }));
           res.json(shows);
         }
       }

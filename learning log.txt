@@ -253,3 +253,26 @@ re the popup not expanding on list, i kinda fixed it by putting the results in a
   overflow-y:auto;
 }
 which works ish - the div is bigger than the popup now, and things i add after the popup are outside of it. no idea why, but that's cos i don't really understand the CSS.  that's prolly the next job.
+
+22 jul 2019 - 8 hours
+-----------
+
+spent a long time converting arrays in the server to use map and filter and foreach.  got lots of bugs in certain parts - where things are asynchronous - so reverted back to original.  did keep some conversions though - i think there's more to do in the client.
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
+
+optimised all the array handling to use maps and filters in client - few instances.
+
+now to learn about hooks - it's the new thang
+https://reactjs.org/docs/hooks-intro.html
+https://reactjs.org/docs/hooks-overview.html
+
+got it working for most components, except showcalendar which i was previously using creatref for - that doesn't seem to be working properly any more. nor does binding methods to this for the popup stuff..
+
+ok, i've updated everything, it's sort of working except for two issues which i've added comments to in ShowCalendarDoesntWork and App.js - to do with getting show calendar to update properly.
+
+however, it is now midnight, so a problem for another day.
+
+
+

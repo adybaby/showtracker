@@ -4,7 +4,7 @@ const Show = ({ show, handleShowClicked }) => {
   return (
     <button
       className="list-group-item"
-      onClick={() => {      
+      onClick={() => {
         handleShowClicked(show.id, show.name);
       }}
     >
@@ -17,11 +17,9 @@ const ShowList = ({ showList, handleShowClicked }) => {
   let showJSX = [];
 
   if (typeof showList !== "undefined" && showList.length > 0) {
-    for (const show of showList) {
-      showJSX.push(
-        <Show show={show} key={show.id} handleShowClicked={handleShowClicked} />
-      );
-    }
+    showJSX = showList.map(show => (
+      <Show show={show} key={show.id} handleShowClicked={handleShowClicked} />
+    ));
   }
 
   return (

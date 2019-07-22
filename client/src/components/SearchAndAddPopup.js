@@ -1,105 +1,94 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import ShowList from "./ShowList";
-import { Container, Row, Col } from "reactstrap";
 
-class SearchAndAddPopup extends Component {
-  constructor(props) {
-    super(props);
-    this.handleSearchTermChange = this.handleSearchTermChange.bind(this);
-    this.handleSubmitSearch = this.handleSubmitSearch.bind(this);
-  }
+function SearchAndAddPopup(props) {
+  const [resultsList, setResultsList] = useState([]);
+  const [searching, setSearching] = useState(false);
+  const [doneFirstSearch, setDoneFirstSearch] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  state = {
-    resultsList: [],
-    searching: false,
-    doneFirstSearch: false,
-    searchTerm: ""
-  };
-
-  findShows(showName) {
+  const findShows = showName => {
     try {
-      this.setState({ searching: true });
+      setSearching(true);
       fetch("http://localhost:3000/findShow?name=" + showName)
         .then(data => {
           return data.json();
         })
         .then(results => {
-          this.setState({ resultsList: [] });
           if (results.length > 0) {
-            for (const show of results) {
-              this.state.resultsList.push({
-                id: show.id,
-                name: show.name
-              });
-            }
-            this.setState(this.state);
+            setResultsList(
+              results.map(result => ({
+                id: result.id,
+                name: result.name
+              }))
+            );
+          } else {
+            setResultsList([]);
           }
-          this.setState({ searching: false });
-          this.setState({ doneFirstSearch: true });
+          setSearching(false);
+          setDoneFirstSearch(true);
         });
     } catch (err) {
-      this.setState({ searching: false });
-      this.setState({ doneFirstSearch: true });
+      setSearching(false);
+      setDoneFirstSearch(true);
       console.log(err);
     }
-  }
+  };
 
-  handleSearchTermChange(event) {
-    this.setState({ searchTerm: event.target.value });
-  }
+  const handleSearchTermChange = event => {
+    setSearchTerm(event.target.value);
+  };
 
-  handleSubmitSearch(event) {
+  const handleSubmitSearch = event => {
     event.preventDefault();
-    this.findShows(this.state.searchTerm);
-  }
+    findShows(searchTerm);
+  };
 
-  render() {
-    var results;
-    if (this.state.resultsList.length < 1) {
-      if (this.state.doneFirstSearch === false) {
-        results = (
-          <div>
-            Type the name of a show and hit search. Click on a show to add it to
-            your list. Hit X to close this popup.
-          </div>
-        );
-      } else if (this.state.searching === true) {
-        results = <div>Searching..</div>;
-      } else {
-        results = <div>No shows found.</div>;
-      }
-    } else {
+  var results;
+  if (resultsList.length < 1) {
+    if (doneFirstSearch === false) {
       results = (
-        <ShowList
-          showList={this.state.resultsList}
-          handleShowClicked={this.props.handleShowClicked}
-        />
-      );
-    }
-
-    return (
-      <div className="popup">
-        <div className="popup_inner">
-          <button onClick={this.props.closePopup} className="float-right">
-            X
-          </button>
-
-          <h1>Find and Add Shows</h1>
-
-          <form onSubmit={this.handleSubmitSearch}>
-            <input
-              type="text"
-              value={this.state.searchTerm}
-              onChange={this.handleSearchTermChange}
-            />
-            <input type="submit" value="Search" />
-          </form>
-
-          <div className="list">{results}</div>
+        <div>
+          Type the name of a show and hit search. Click on a show to add it to
+          your list. Hit X to close this popup.
         </div>
-      </div>
+      );
+    } else if (searching === true) {
+      results = <div>Searching..</div>;
+    } else {
+      results = <div>No shows found.</div>;
+    }
+  } else {
+    results = (
+      <ShowList
+        showList={resultsList}
+        handleShowClicked={props.handleShowClicked}
+      />
     );
   }
+
+  return (
+    <div className="popup">
+      <div className="popup_inner">
+        <button onClick={props.closePopup} className="float-right">
+          X
+        </button>
+
+        <h1>Find and Add Shows</h1>
+
+        <form onSubmit={handleSubmitSearch}>
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearchTermChange}
+          />
+          <input type="submit" value="Search" />
+        </form>
+
+        <div className="list">{results}</div>
+      </div>
+    </div>
+  );
 }
 
 export default SearchAndAddPopup;
