@@ -10,12 +10,14 @@ function App() {
   const [showList, setShowList] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [awaitingFetchShowList, setAwaitingFetchShowList] = useState(true);
-
+ 
   useEffect(() => {
+    console.log("useEffect called");
     setAwaitingFetchShowList(true);
     fetch("http://localhost:3000/listShows")
       .then(res => res.json())
       .then(data => {
+        console.log("got new shows");
         setShowList(data.map(show => ({ id: show.id, name: show.name })));
       })
       .catch(e => {

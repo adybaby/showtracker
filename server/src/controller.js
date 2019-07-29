@@ -41,9 +41,6 @@ export function removeShow(req, res) {
 }
 
 async function getShowList() {
-
-  console.log("getShowList  called");  
-  
   return new Promise((resolve, reject) => {
     Show.find({}, (err, showList) => {
       if (err) {
@@ -215,9 +212,6 @@ async function makeShowCalendar() {
 
 export async function getShowCalendar(req, res) {
   addCorsExceptions(res);
-
-  console.log("getShowCalendar called");
-
   try {
     res.json(await makeShowCalendar(req.query.futureOnly));
   } catch (err) {

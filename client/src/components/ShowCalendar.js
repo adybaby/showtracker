@@ -19,14 +19,12 @@ function ShowCalendar({ showList }) {
 
   // whenever showList changes, get a new episode list
   useEffect(() => {
-    fetchShowCalendar();
-  }, [showList]);
-
-  const fetchShowCalendar = () => {
     setAwaitingFetchShowCalendar(true);
-    fetch("http://localhost:3000/getShowCalendar")
+    if (showList.length > 0) {
+      fetch("http://localhost:3000/getShowCalendar")
       .then(res => res.json())
       .then(data => {
+        console.log("updated show calendar");
         if (typeof data === "undefined" || data.length < 1) {
           setEpisodes([]);
           setFilteredEpisodes([]);
@@ -40,7 +38,8 @@ function ShowCalendar({ showList }) {
       .finally(() => {
         setAwaitingFetchShowCalendar(false);
       });
-  };
+    }
+  }, [showList]);
 
   // whenever episode list changes, or filter checkboxes, refliter the displayed list
   useEffect(() => {

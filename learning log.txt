@@ -274,12 +274,14 @@ ok, i've updated everything, it's sort of working except for two issues which i'
 
 however, it is now midnight, so a problem for another day.
 
-29 july 2019 - 6 hours
+29 july 2019 - 7 hours
 Had some mentoring at work, it occurs to me that I'm missing some React basics - so, time to work steadily through all of this:
 https://reactjs.org/docs/introducing-jsx.html
 
 read it all, learnt quite a bit - finally refactored everything to functional components and hooks and got all my code working, with one niggling problem which i've been trying to fix for the last few hours, and can't for the life of me work out why it's happening - the useEffect is calling the fetch for show lists three times with every change, and i've no idea why.  it doesn't break the app, but i've no idea why it's doing it.
 
+another hour later, finally worked it out - the server was calling its own api twice, and showcalendar was calling twice (once when the showlist was initially empty, then again once it got populated) fixed it by only calling when the showlist has shows in it, and by removing the extra call in the server. phhhheewww.
 
+got a couple extra bugs now - one where if there is no shows, the calendar sits on "please wait" indefinitely, and another when you remove the final show, the calendar still has it listed.
 
 
