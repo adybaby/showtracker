@@ -10,15 +10,8 @@ function App() {
   const [showList, setShowList] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [awaitingFetchShowList, setAwaitingFetchShowList] = useState(true);
-  const [isSyncdWithDb, setIsSyncdWithDb] = useState(false);
 
   useEffect(() => {
-    if (!isSyncdWithDb) {
-      fetchShowList();
-    }
-  }, [isSyncdWithDb]);
-
-  const fetchShowList = () => {
     setAwaitingFetchShowList(true);
     fetch("http://localhost:3000/listShows")
       .then(res => res.json())
@@ -30,9 +23,8 @@ function App() {
       })
       .finally(() => {
         setAwaitingFetchShowList(false);
-        setIsSyncdWithDb(true);
       });
-  };
+  }, []);
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
@@ -56,7 +48,6 @@ function App() {
           })
           .then(show => {
             setShowList([...showList, { id: show.id, name: show.name }]);
-            setIsSyncdWithDb(false);
           });
       } catch (err) {
         console.log(err);
@@ -72,7 +63,6 @@ function App() {
         })
         .then(removedShowId => {
           setShowList(showList.filter(show => show.id !== removedShowId));
-          setIsSyncdWithDb(false);
         });
     } catch (err) {
       console.log(err);
