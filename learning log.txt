@@ -274,7 +274,7 @@ ok, i've updated everything, it's sort of working except for two issues which i'
 
 however, it is now midnight, so a problem for another day.
 
-29 july 2019 - 7 hours
+29 july 2019 - 7.5 hours
 Had some mentoring at work, it occurs to me that I'm missing some React basics - so, time to work steadily through all of this:
 https://reactjs.org/docs/introducing-jsx.html
 
@@ -284,4 +284,4 @@ another hour later, finally worked it out - the server was calling its own api t
 
 got a couple extra bugs now - one where if there is no shows, the calendar sits on "please wait" indefinitely, and another when you remove the final show, the calendar still has it listed.
 
-
+fixed those bugs - there was some state confusion after adding the "if showList>0" test in the useeffect of showcalendar, where it didn't update the showlist when that list reduced to zero, and diudn't update the await flag on the fetch

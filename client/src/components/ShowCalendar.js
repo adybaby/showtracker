@@ -14,13 +14,13 @@ function ShowCalendar({ showList }) {
   const [showFutureOnly, setShowFutureOnly] = useState(true);
   const [showNextOnly, setShowNextOnly] = useState(true);
   const [awaitingFetchShowCalendar, setAwaitingFetchShowCalendar] = useState(
-    true
+    false
   );
 
   // whenever showList changes, get a new episode list
   useEffect(() => {
-    setAwaitingFetchShowCalendar(true);
     if (showList.length > 0) {
+      setAwaitingFetchShowCalendar(true);      
       fetch("http://localhost:3000/getShowCalendar")
       .then(res => res.json())
       .then(data => {
@@ -38,6 +38,9 @@ function ShowCalendar({ showList }) {
       .finally(() => {
         setAwaitingFetchShowCalendar(false);
       });
+    } else {
+      setEpisodes([]);
+      setFilteredEpisodes([]);
     }
   }, [showList]);
 
