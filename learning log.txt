@@ -274,5 +274,12 @@ ok, i've updated everything, it's sort of working except for two issues which i'
 
 however, it is now midnight, so a problem for another day.
 
+29 july 2019 - 6 hours
+Had some mentoring at work, it occurs to me that I'm missing some React basics - so, time to work steadily through all of this:
+https://reactjs.org/docs/introducing-jsx.html
+
+read it all, learnt quite a bit - finally refactored everything to functional components and hooks and got all my code working, with one niggling problem which i've been trying to fix for the last few hours, and can't for the life of me work out why it's happening - the useEffect is calling the fetch for show lists three times with every change, and i've no idea why.  it doesn't break the app, but i've no idea why it's doing it.
+
+
 
 

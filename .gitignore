@@ -27,5 +27,4 @@ server/.DS_Store
 server/npm-debug.log*
 server/yarn-debug.log*
 server/yarn-error.log*
-server/.babelrc
 

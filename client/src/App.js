@@ -1,6 +1,3 @@
-// this is broken from the previous since i now don't know how to update
-// showcalendar after a show is added or removed (before it was in togglepopup)
-
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col } from "reactstrap";
 import "./App.css";
@@ -12,25 +9,33 @@ import AppBar from "./components/AppBar";
 function App() {
   const [showList, setShowList] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
-  const [showAdded, setShowAdded] = useState(false);
-  const [retrievedShows, setRetrievedShows] = useState(false);
+  const [awaitingFetchShowList, setAwaitingFetchShowList] = useState(true);
+  const [isSyncdWithDb, setIsSyncdWithDb] = useState(false);
 
   useEffect(() => {
+    if (!isSyncdWithDb) {
+      fetchShowList();
+    }
+  }, [isSyncdWithDb]);
+
+  const fetchShowList = () => {
+    setAwaitingFetchShowList(true);
     fetch("http://localhost:3000/listShows")
       .then(res => res.json())
       .then(data => {
         setShowList(data.map(show => ({ id: show.id, name: show.name })));
-        setRetrievedShows(true);
       })
-      .catch(console.log);
-  });
+      .catch(e => {
+        console.log(e);
+      })
+      .finally(() => {
+        setAwaitingFetchShowList(false);
+        setIsSyncdWithDb(true);
+      });
+  };
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
-    if (showAdded) {
-      setShowAdded(false);
-      // how to call ShowCalendar to update?
-    }
   };
 
   const handleAddShow = (showId, showName) => {
@@ -51,7 +56,7 @@ function App() {
           })
           .then(show => {
             setShowList([...showList, { id: show.id, name: show.name }]);
-            setShowAdded(true);
+            setIsSyncdWithDb(false);
           });
       } catch (err) {
         console.log(err);
@@ -67,22 +72,23 @@ function App() {
         })
         .then(removedShowId => {
           setShowList(showList.filter(show => show.id !== removedShowId));
+          setIsSyncdWithDb(false);
         });
     } catch (err) {
       console.log(err);
     }
   };
 
-  let showListJSX = <p>Populating show list..</p>;
-  if (retrievedShows) {
-    if (showList.length < 1) {
-      showListJSX = <p>No shows added. Click Add Show above to add shows.</p>;
-    } else {
-      showListJSX = (
-        <ShowList showList={showList} handleShowClicked={handleRemoveShow} />
-      );
-    }
-  }
+  let listBody;
+
+  if (awaitingFetchShowList) {
+    listBody = <p>Populating show list..</p>;
+  } else if (showList.length < 1) {
+    listBody = <p>No shows added. Click Add Show above to add shows.</p>;
+  } else
+    listBody = (
+      <ShowList showList={showList} handleShowClicked={handleRemoveShow} />
+    );
 
   return (
     <div>
@@ -96,11 +102,11 @@ function App() {
           <Col xs={5} lg={3} xl={2}>
             <Col>
               <button onClick={togglePopup}>Add Shows</button>
-              {showListJSX}
+              {listBody}
             </Col>
           </Col>
           <Col xs={7} lg={9} xl={10}>
-            <ShowCalendar />
+            <ShowCalendar showList={showList} />
           </Col>
         </Row>
       </Container>
