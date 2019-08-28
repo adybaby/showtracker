@@ -285,3 +285,58 @@ another hour later, finally worked it out - the server was calling its own api t
 got a couple extra bugs now - one where if there is no shows, the calendar sits on "please wait" indefinitely, and another when you remove the final show, the calendar still has it listed.
 
 fixed those bugs - there was some state confusion after adding the "if showList>0" test in the useeffect of showcalendar, where it didn't update the showlist when that list reduced to zero, and diudn't update the await flag on the fetch
+
+5 august 2019, 6hrs
+
+learnt about destructuring, as i was using it from boiler plate but my understanding was low
+https://exploringjs.com/impatient-js/ch_destructuring.html
+
+going to update my app with redux, for learning, so going through this tutorial:
+https://redux.js.org/basics/basic-tutorial
+
+- also came across two new things - compile time checking with PropTypes, and Object.assign for deep assignments (used in redux so as not to change the original state in reducers)
+https://reactjs.org/docs/typechecking-with-proptypes.html
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+
+also watching the tutorials here:
+https://egghead.io/lessons/react-redux-the-single-immutable-state-tree
+(got blocked at ep 5 so watched this instead:
+https://www.youtube.com/watch?v=CVpUuw9XSjY)
+
+(wrote a counter app using redux)
+
+14th/19th aug - 9hrs
+Been converting showtracker app into an app which uses redux and learning about thunk:
+https://github.com/reduxjs/redux-thunk
+https://reactgo.com/redux-hooks-fetch-data/
+https://codeburst.io/understanding-redux-thunk-6dbae0241817
+https://medium.com/@stowball/a-dummys-guide-to-redux-and-thunk-in-react-d8904a7005d3
+
+also installed the redux chrome dev extension and been playing around with that:
+https://github.com/zalmoxisus/redux-devtools-extension
+
+So far I've got shows to load, add, and remove through a basic test client.
+
+28th aug - 10.5hrs
+
+on client:
+made big refactoring changes to pretty much everything, redesigning entire state model and improving performance to push much to the client side:
+converted everything to redux/thunk, including all actions and reducers for shows and episodes
+refactored out episode filtering and put in helper
+refactored out all server handling, extracted common methods, and put in ServerInterface (out of actions, which now pass callbacks, and find shows from the popup)
+moved helpers/dates/interfaces to util folder
+rewrote app.js, popups, and showcalendar to defer logic to external helpers
+tidied up all redundent code
+changed methods for updating episodes to chain dispaches in thunk action functions, such that when shows are updated, episodes automatically are too, and episode
+list only goes back to server if a show is added, and then only for that show (not an entire episode list refresh, which makes things much faster) 
+remove show now does not need to go back to refresh episode list at all from tvdb, just removes the show from server and removes the set of episodes from client
+fixed issues where show objects were needed to be unpacked and packed, now all handled without the need to do that
+replaced filtering to use a simplified approach (though the radio group is now clunky - will replace with a drop down soon enough)
+simplified all status watching stuff - server fetches now dispatch updates on whether the results are empty or not, whether its in progress, finished, etc - centralising all that logic and removing it from components.
+
+on server:
+rewrote episode list stuff such that much is deferred to client now, and can be called to provide episodes for specific shows as asked for by client (rather than always getting db show list and updating all episodes from that)
+added unique indexes to mongodb and rebuilt indexes such that duplicate shows cannot be added and integrity protected server side (thus, also moved duplication checks from client)
+removed all redundent methods to make server smaller.
+
+next up: dressing it and pulling in images, probs with bootstrap.

@@ -40,6 +40,7 @@ export function removeShow(req, res) {
   );
 }
 
+/*
 async function getShowList() {
   return new Promise((resolve, reject) => {
     Show.find({}, (err, showList) => {
@@ -60,6 +61,17 @@ export async function listShows(req, res) {
   } catch (err) {
     res.send(err.message);
   }
+}
+*/
+
+export async function listShows(req, res) {
+  Show.find({}, (err, showList) => {
+    if (err) {
+      res.send(err.message);
+    } else {
+      res.json(showList);
+    }
+  });
 }
 
 // TVDB routes
@@ -123,12 +135,24 @@ export async function findShow(req, res) {
   );
 }
 
-async function getShowOrEpisodeInfo(queryId, options) {
-  const bearerToken = await getBearerToken();
+function makeEpisodeSummary(episode, show) {
+  const episodeSummary = {};
+  episodeSummary.key = episode.id;
+  episodeSummary.episodeName = episode.episodeName;
+  episodeSummary.shortName = `S${`0${episode.airedSeason}`.slice(
+    -2,
+  )}E${`0${episode.airedEpisodeNumber}`.slice(-2)}`;
+  episodeSummary.airedEpisodeNumber = episode.airedEpisodeNumber;
+  episodeSummary.firstAired = episode.firstAired;
+  episodeSummary.showName = show.name;
+  episodeSummary.showId = show.id;
+  return episodeSummary;
+}
 
+async function getEpisodesForShow(show, bearerToken) {
   return new Promise((resolve, reject) => {
     request.get(
-      `${tvdbUrls.series}/${queryId}${options.provideEpisodeDetail ? '/episodes' : ''}`,
+      `${tvdbUrls.series}/${show.id}$/episodes`,
       {
         auth: {
           bearer: bearerToken,
@@ -137,84 +161,49 @@ async function getShowOrEpisodeInfo(queryId, options) {
       (err, tvdbRes) => {
         if (err) reject(err);
         else {
-          resolve(JSON.parse(tvdbRes.body));
+          const episodes = [];
+          const episodesRes = JSON.parse(tvdbRes.body).data;
+
+          if (typeof episodesRes === 'undefined') {
+            reject(Error(`Could not find episodes for show ${show.id}`));
+          } else {
+            for (const episode of episodesRes) {
+              if (episode.airedSeason !== 0) {
+                episodes.push(makeEpisodeSummary(episode, show));
+              }
+            }
+            resolve(episodes);
+          }
         }
       },
     );
   });
 }
 
-export async function showInfo(req, res) {
+export async function getEpisodes(req, res) {
+  let bearerToken;
+
   addCorsExceptions(res);
 
   try {
-    res.json(await getShowOrEpisodeInfo(req.query.id, { provideEpisodeDetail: false }));
+    bearerToken = await getBearerToken();
   } catch (err) {
     res.send(err.message);
   }
-}
 
-export async function episodeInfo(req, res) {
-  addCorsExceptions(res);
+  const episodes = [];
+  const shows = JSON.parse(req.query.shows);
 
-  try {
-    res.json(await getShowOrEpisodeInfo(req.query.id, { provideEpisodeDetail: true }));
-  } catch (err) {
-    res.send(err.message);
-  }
-}
-
-function makeEpisodeSummary(episode, showName) {
-  const episodeSummary = {};
-  episodeSummary.key = episode.id;
-  episodeSummary.episodeName = episode.episodeName;
-  episodeSummary.shortName = `S${`0${episode.airedSeason}`.slice(-2)}E${`0${
-    episode.airedEpisodeNumber
-  }`.slice(-2)}`;
-  episodeSummary.airedEpisodeNumber = episode.airedEpisodeNumber;
-  episodeSummary.firstAired = episode.firstAired;
-  episodeSummary.showName = showName;
-  return episodeSummary;
-}
-
-async function makeShowCalendar() {
-  return new Promise(async (resolve, reject) => {
+  for (const show of shows) {
     try {
-      const showList = await getShowList();
-      let episodeList;
-      const allEpisodes = [];
-
-      for (const show of showList) {
-        // eslint-disable-next-line no-await-in-loop
-        episodeList = (await getShowOrEpisodeInfo(show.id, { provideEpisodeDetail: true })).data;
-        for (const episode of episodeList) {
-          if (episode.airedSeason !== 0) {
-            allEpisodes.push(makeEpisodeSummary(episode, show.name));
-          }
-        }
-      }
-
-      allEpisodes.sort((a, b) => {
-        const dateA = new Date(a.firstAired);
-        const dateB = new Date(b.firstAired);
-
-        return a.firstAired === b.firstAired
-          ? a.airedEpisodeNumber - b.airedEpisodeNumber
-          : dateA - dateB;
-      });
-
-      resolve(allEpisodes);
-    } catch (err) {
-      reject(err);
+      // eslint-disable-next-line no-await-in-loop
+      const episodesForThisShow = await getEpisodesForShow(show, bearerToken);
+      episodes.push(...episodesForThisShow);
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
     }
-  });
-}
-
-export async function getShowCalendar(req, res) {
-  addCorsExceptions(res);
-  try {
-    res.json(await makeShowCalendar(req.query.futureOnly));
-  } catch (err) {
-    res.send(err.message);
   }
+
+  res.json(episodes);
 }

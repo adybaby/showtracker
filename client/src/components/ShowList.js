@@ -5,7 +5,7 @@ const Show = ({ show, handleShowClicked }) => {
     <button
       className="list-group-item"
       onClick={() => {
-        handleShowClicked(show.id, show.name);
+        handleShowClicked(show);
       }}
     >
       {show.name} ({show.id})

@@ -1,38 +1,38 @@
 import React, { useState } from "react";
 import ShowList from "./ShowList";
+import * as server from "../util/ServerInterface";
 
 function SearchAndAddPopup(props) {
+  const SEARCH_STATUS = {
+    NO_SEARCH_DONE: "Enter a show name above and hit search",
+    IN_PROGRESS: "Searching for shows..",
+    FOUND_SHOWS: "Found Shows",
+    NO_SHOWS_FOUND: "No shows were found.",
+    ERROR: "Error Searching for Shows"
+  };
   const [resultsList, setResultsList] = useState([]);
-  const [searching, setSearching] = useState(false);
-  const [doneFirstSearch, setDoneFirstSearch] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchStatus, setSearchStatus] = useState(
+    SEARCH_STATUS.NO_SEARCH_DONE
+  );
 
-  const findShows = showName => {
-    try {
-      setSearching(true);
-      fetch("http://localhost:3000/findShow?name=" + showName)
-        .then(data => {
-          return data.json();
-        })
-        .then(results => {
-          if (results.length > 0) {
-            setResultsList(
-              results.map(result => ({
-                id: result.id,
-                name: result.name
-              }))
-            );
-          } else {
-            setResultsList([]);
-          }
-          setSearching(false);
-          setDoneFirstSearch(true);
-        });
-    } catch (err) {
-      setSearching(false);
-      setDoneFirstSearch(true);
-      console.log(err);
-    }
+  const findShows = () => {
+    setSearchStatus(SEARCH_STATUS.IN_PROGRESS);
+    server.findShows(
+      searchTerm,
+      data => {
+        if (data.length > 0) {
+          setResultsList(data);
+          setSearchStatus(SEARCH_STATUS.FOUND_SHOWS);
+        } else {
+          setResultsList([]);
+          setSearchStatus(SEARCH_STATUS.NO_SHOWS_FOUND);
+        }
+      },
+      () => {
+        setSearchStatus(SEARCH_STATUS.ERROR);
+      }
+    );
   };
 
   const handleSearchTermChange = event => {
@@ -41,31 +41,8 @@ function SearchAndAddPopup(props) {
 
   const handleSubmitSearch = event => {
     event.preventDefault();
-    findShows(searchTerm);
+    findShows();
   };
-
-  var results;
-  if (resultsList.length < 1) {
-    if (doneFirstSearch === false) {
-      results = (
-        <div>
-          Type the name of a show and hit search. Click on a show to add it to
-          your list. Hit X to close this popup.
-        </div>
-      );
-    } else if (searching === true) {
-      results = <div>Searching..</div>;
-    } else {
-      results = <div>No shows found.</div>;
-    }
-  } else {
-    results = (
-      <ShowList
-        showList={resultsList}
-        handleShowClicked={props.handleShowClicked}
-      />
-    );
-  }
 
   return (
     <div className="popup">
@@ -85,7 +62,16 @@ function SearchAndAddPopup(props) {
           <input type="submit" value="Search" />
         </form>
 
-        <div className="list">{results}</div>
+        <div className="list">
+          {searchStatus === SEARCH_STATUS.FOUND_SHOWS ? (
+            <ShowList
+              showList={resultsList}
+              handleShowClicked={props.handleShowClicked}
+            />
+          ) : (
+            <p>{searchStatus}</p>
+          )}
+        </div>
       </div>
     </div>
   );

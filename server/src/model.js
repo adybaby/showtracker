@@ -3,7 +3,8 @@ import Mongoose from 'mongoose';
 const showSchema = Mongoose.Schema({
   id: {
     type: String,
-    required: 'Id is required',
+    index: true,
+    unique: true,
   },
   name: {
     type: String,

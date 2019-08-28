@@ -1,0 +1,29 @@
+export const LOAD_SHOWS = {
+  INITIAL: "LOAD_SHOWS_INITIAL_STATE",
+  IN_PROGRESS: "Loading Shows..",
+  FOUND_SHOWS: "Found shows",
+  NO_SHOWS_FOUND: "No shows found",
+  ERROR: "Error loading shows"
+};
+
+export const ADD_SHOW = {
+  INITIAL: "ADD_SHOW_INITIAL_STATE",
+  IN_PROGRESS: "Adding Show..",
+  COMPLETED: "Added Show",
+  ERROR: "Error Adding Show"
+};
+
+export const REMOVE_SHOW = {
+  INITIAL: "REMOVE_SHOW_INITIAL_STATE",
+  IN_PROGRESS: "Removing Show..",
+  COMPLETED: "Removed Show",
+  ERROR: "Error Removing Show"
+};
+
+export const LOAD_EPISODES = {
+  INITIAL: "LOAD_EPISODES_INITIAL_STATE",
+  IN_PROGRESS: "Loading episodes..",
+  FOUND_EPISODES: "Found episodes",
+  NO_EPISODES_FOUND: "No episodes found",
+  ERROR: "Error loading episodes"
+};

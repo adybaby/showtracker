@@ -8,7 +8,5 @@ module.exports = function routes(app) {
 
   // TVDB routes
   app.route('/findshow').get(Ctrl.findShow);
-  app.route('/showinfo').get(Ctrl.showInfo);
-  app.route('/episodeInfo').get(Ctrl.episodeInfo);
-  app.route('/getShowCalendar').get(Ctrl.getShowCalendar);
+  app.route('/getEpisodes').get(Ctrl.getEpisodes);
 };
