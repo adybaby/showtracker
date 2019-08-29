@@ -11,6 +11,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/showtracker', {
   useNewUrlParser: true,
 });
+mongoose.set('useCreateIndex', true);
 
 // bodyparser
 app.use(bodyParser.urlencoded({ extended: true }));

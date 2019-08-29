@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ShowList from "./ShowList";
 import * as server from "../util/ServerInterface";
 
-function SearchAndAddPopup(props) {
+const SearchAndAddPopup = props => {
   const SEARCH_STATUS = {
     NO_SEARCH_DONE: "Enter a show name above and hit search",
     IN_PROGRESS: "Searching for shows..",
@@ -15,6 +15,12 @@ function SearchAndAddPopup(props) {
   const [searchStatus, setSearchStatus] = useState(
     SEARCH_STATUS.NO_SEARCH_DONE
   );
+
+  const searchBox = useRef(null);
+
+  useEffect(() => {
+    searchBox.current.focus();
+  }, []);
 
   const findShows = () => {
     setSearchStatus(SEARCH_STATUS.IN_PROGRESS);
@@ -57,6 +63,7 @@ function SearchAndAddPopup(props) {
           <input
             type="text"
             value={searchTerm}
+            ref={searchBox}
             onChange={handleSearchTermChange}
           />
           <input type="submit" value="Search" />
@@ -75,6 +82,6 @@ function SearchAndAddPopup(props) {
       </div>
     </div>
   );
-}
+};
 
 export default SearchAndAddPopup;

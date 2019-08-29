@@ -1,10 +1,10 @@
 import React from "react";
 
-function AppBar() {
+const AppBar = () => {
   return (
     <div>
       <h1>SHOWTRACKER</h1>
     </div>
   );
-}
+};
 export default AppBar;

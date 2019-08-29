@@ -22,7 +22,7 @@ function App() {
     setShowPopup(!showPopup);
   };
 
-  const handleAddShow = (show) => {
+  const handleAddShow = show => {
     dispatch(addShow(show));
   };
 

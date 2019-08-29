@@ -4,15 +4,13 @@ import Show from './model';
 
 const tvdbUrls = JSON.parse(fileSystem.readFileSync('./tvdbroutes.json'));
 
-function addCorsExceptions(res) {
-  // adding CORS global exceptiion because stupid Chrome doesn't allow localhost exceptions
-  res.header('Access-Control-Allow-Origin', '*');
-}
+// adding CORS global exceptiion because stupid Chrome doesn't allow localhost exceptions
+const addCorsException = res => res.header('Access-Control-Allow-Origin', '*');
 
 // MONGO routes
 
-export function addShow(req, res) {
-  addCorsExceptions(res);
+export const addShow = (req, res) => {
+  addCorsException(res);
 
   new Show(req.query).save((err, show) => {
     if (err) {
@@ -21,10 +19,10 @@ export function addShow(req, res) {
       res.json(show);
     }
   });
-}
+};
 
-export function removeShow(req, res) {
-  addCorsExceptions(res);
+export const removeShow = (req, res) =>{
+  addCorsException(res);
 
   Show.deleteOne(
     {
@@ -38,33 +36,11 @@ export function removeShow(req, res) {
       }
     },
   );
-}
-
-/*
-async function getShowList() {
-  return new Promise((resolve, reject) => {
-    Show.find({}, (err, showList) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(showList);
-      }
-    });
-  });
-}
+};
 
 export async function listShows(req, res) {
-  addCorsExceptions(res);
+  addCorsException(res);
 
-  try {
-    res.json(await getShowList());
-  } catch (err) {
-    res.send(err.message);
-  }
-}
-*/
-
-export async function listShows(req, res) {
   Show.find({}, (err, showList) => {
     if (err) {
       res.send(err.message);
@@ -97,10 +73,9 @@ async function getBearerToken() {
 }
 
 export async function findShow(req, res) {
+  addCorsException(res);
+
   let bearerToken;
-
-  addCorsExceptions(res);
-
   try {
     bearerToken = await getBearerToken();
   } catch (err) {
@@ -135,19 +110,17 @@ export async function findShow(req, res) {
   );
 }
 
-function makeEpisodeSummary(episode, show) {
-  const episodeSummary = {};
-  episodeSummary.key = episode.id;
-  episodeSummary.episodeName = episode.episodeName;
-  episodeSummary.shortName = `S${`0${episode.airedSeason}`.slice(
-    -2,
-  )}E${`0${episode.airedEpisodeNumber}`.slice(-2)}`;
-  episodeSummary.airedEpisodeNumber = episode.airedEpisodeNumber;
-  episodeSummary.firstAired = episode.firstAired;
-  episodeSummary.showName = show.name;
-  episodeSummary.showId = show.id;
-  return episodeSummary;
-}
+const episodeShortName = (season, episode) => `S${`0${season}`.slice(-2)}E${`0${episode}`.slice(-2)}`;
+
+const episodeSummary = (episode, show) => ({
+  showId: show.id,
+  showName: show.name,
+  key: episode.id,
+  episodeName: episode.episodeName,
+  shortName: episodeShortName(episode.airedSeason, episode.airedEpisodeNumber),
+  airedEpisodeNumber: episode.airedEpisodeNumber,
+  firstAired: episode.firstAired,
+});
 
 async function getEpisodesForShow(show, bearerToken) {
   return new Promise((resolve, reject) => {
@@ -169,7 +142,7 @@ async function getEpisodesForShow(show, bearerToken) {
           } else {
             for (const episode of episodesRes) {
               if (episode.airedSeason !== 0) {
-                episodes.push(makeEpisodeSummary(episode, show));
+                episodes.push(episodeSummary(episode, show));
               }
             }
             resolve(episodes);
@@ -181,12 +154,11 @@ async function getEpisodesForShow(show, bearerToken) {
 }
 
 export async function getEpisodes(req, res) {
+  addCorsException(res);
+
   let bearerToken;
-
-  addCorsExceptions(res);
-
   try {
-    bearerToken = await getBearerToken();
+    bearerToken = await getBearerToken(res);
   } catch (err) {
     res.send(err.message);
   }

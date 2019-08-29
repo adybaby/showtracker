@@ -22,14 +22,11 @@ const months = [
   "December"
 ];
 
-export function formatDate(date) {
-  return (
-    days[date.getDay()] +
-    " " +
-    date.getDate() +
-    " " +
-    months[date.getMonth()] +
-    " " +
-    date.getFullYear()
-  );
-}
+export const formatDate = date =>
+  days[date.getDay()] +
+  " " +
+  date.getDate() +
+  " " +
+  months[date.getMonth()] +
+  " " +
+  date.getFullYear();
