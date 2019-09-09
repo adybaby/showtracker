@@ -1,8 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import ShowList from "./ShowList";
 import * as server from "../util/ServerInterface";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import Divider from "@material-ui/core/Divider";
+import { useDispatch } from "react-redux";
+import { addShow } from "../actions/Shows";
 
 const SearchAndAddPopup = props => {
+  const dispatch = useDispatch();
+
   const SEARCH_STATUS = {
     NO_SEARCH_DONE: "Enter a show name above and hit search",
     IN_PROGRESS: "Searching for shows..",
@@ -50,6 +57,20 @@ const SearchAndAddPopup = props => {
     findShows();
   };
 
+  const Result = ({show}) => (
+    <div>
+    <Divider />
+    <ListItem
+      color="inherited"
+      button
+      key={show.id}
+      onClick={() => dispatch(addShow(show))}
+    >
+      <ListItemText primary={show.name} />
+    </ListItem>
+    </div>    
+  );
+
   return (
     <div className="popup">
       <div className="popup_inner">
@@ -71,10 +92,7 @@ const SearchAndAddPopup = props => {
 
         <div className="list">
           {searchStatus === SEARCH_STATUS.FOUND_SHOWS ? (
-            <ShowList
-              showList={resultsList}
-              handleShowClicked={props.handleShowClicked}
-            />
+            <ShowList showList={resultsList} ShowComponent={Result} />
           ) : (
             <p>{searchStatus}</p>
           )}

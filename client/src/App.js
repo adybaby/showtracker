@@ -1,24 +1,35 @@
+import CssBaseline from "@material-ui/core/CssBaseline";
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
-import { addShow, removeShow, loadShows } from "./actions/Shows";
-import * as STATUS from "./actions/ActionStatuses";
+import { addShow, fetchShows } from "./actions/Shows";
 import ShowList from "./components/ShowList";
 import SearchAndAddPopup from "./components/SearchAndAddPopup";
+import ShowCard from "./components/ShowCardListItem";
 import ShowCalendar from "./components/ShowCalendar";
-import AppBar from "./components/AppBar";
+import ResponsiveDrawerLayout from "./components/ResponsiveDrawerLayout";
+import Button from "@material-ui/core/Button";
+import EpisodeFilter from "./components/EpisodeFilter";
+import Divider from "@material-ui/core/Divider";
+import { makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles(theme => ({
+  addShow: {
+    marginLeft: theme.spacing(0)
+  }
+}));
 
 function App() {
+  const classes = useStyles();
+
   const [showPopup, setShowPopup] = useState(false);
   const shows = useSelector(state => state.shows);
-  const loadShowsStatus = useSelector(state => state.loadShowsStatus);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(loadShows());
+    dispatch(fetchShows());
   }, [dispatch]);
 
-  const togglePopup = () => {
+  const toggleAddShow = () => {
     setShowPopup(!showPopup);
   };
 
@@ -26,42 +37,42 @@ function App() {
     dispatch(addShow(show));
   };
 
-  const handleRemoveShow = show => {
-    dispatch(removeShow(show.id));
-  };
-
   return (
     <div>
-      <Container fluid>
-        <Row>
-          <Col>
-            <AppBar title="Title" />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={5} lg={3} xl={2}>
-            <Col>
-              <button onClick={togglePopup}>Add Shows</button>
-              {loadShowsStatus === STATUS.LOAD_SHOWS.FOUND_SHOWS ? (
-                <ShowList
-                  showList={shows}
-                  handleShowClicked={handleRemoveShow}
-                />
-              ) : (
-                <p>loadShowsStatus</p>
-              )}
-            </Col>
-          </Col>
-          <Col xs={7} lg={9} xl={10}>
-            <ShowCalendar />
-          </Col>
-        </Row>
-      </Container>
+      <CssBaseline />
+      <ResponsiveDrawerLayout
+        title="SHOW TRACKER"
+        drawerPanel={
+          <div>
+            <Divider />
+            <Button
+              color="inherit"
+              onClick={toggleAddShow}
+              className={classes.addShow}
+              size="large"
+            >
+              Add Shows
+            </Button>
+            <Divider />
+            <ShowList
+              showList={shows}
+              ShowComponent = {ShowCard}
+            />
+          </div>
+        }
+        mainPanel={<ShowCalendar />}
+        toolbarItems={[
+          <EpisodeFilter key="episodeFilter"/>,
+          <Button key ="loginbutton" color="inherit" onClick={() => alert("Not yet implemented")}>
+            Login
+          </Button>
+        ]}
+      />
 
       {showPopup ? (
         <SearchAndAddPopup
           handleShowClicked={handleAddShow}
-          closePopup={togglePopup}
+          closePopup={toggleAddShow}
         />
       ) : null}
     </div>
@@ -69,3 +80,4 @@ function App() {
 }
 
 export default App;
+

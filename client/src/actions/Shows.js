@@ -1,37 +1,39 @@
-import * as types from "./ActionTypes";
-import * as STATUS from "./ActionStatuses";
-import { loadEpisodes, removeEpisodesForShow } from "./Episodes";
+import * as types from "../constants/ActionTypes";
+import * as STATUS from "../constants/ActionStatuses";
+import { fetchEpisodes, removeEpisodesForShow } from "./Episodes";
 import * as server from "../util/ServerInterface";
+import {log} from "../util/Logger";
 
 //load
-export const loadShows = () => {
+export const fetchShows = () => {
   return dispatch => {
-    dispatch(setLoadShowsStatus(STATUS.LOAD_SHOWS.IN_PROGRESS));
+    dispatch(setFetchShowsStatus(STATUS.FETCH_SHOWS.IN_PROGRESS));
 
-    server.loadShows(
+    server.shows(
       data => {
         if (data.length === 0) {
-          dispatch(setLoadShowsStatus(STATUS.LOAD_SHOWS.NO_SHOWS_FOUND));
-        } else {
-          dispatch(showsLoaded(data));
-          dispatch(setLoadShowsStatus(STATUS.LOAD_SHOWS.FOUND_SHOWS));
-          dispatch(loadEpisodes(data));
+          dispatch(setFetchShowsStatus(STATUS.FETCH_SHOWS.NO_SHOWS_FOUND));
+        } else { 
+          dispatch(showsFetched(data));
+          dispatch(setFetchShowsStatus(STATUS.FETCH_SHOWS.FOUND_SHOWS));
+          dispatch(fetchEpisodes(data));
         }
       },
-      () => {
-        dispatch(setLoadShowsStatus(STATUS.LOAD_SHOWS.ERROR));
+      (e) => {
+        log(STATUS.FETCH_SHOWS.ERROR + " : " + e);        
+        dispatch(setFetchShowsStatus(STATUS.FETCH_SHOWS.ERROR));
       }
     );
   };
 };
 
-export const setLoadShowsStatus = status => ({
-  type: types.SET_LOAD_SHOWS_STATUS,
+export const setFetchShowsStatus = status => ({
+  type: types.SET_FETCH_SHOWS_STATUS,
   status
 });
 
-export const showsLoaded = shows => ({
-  type: types.SHOWS_LOADED,
+export const showsFetched = shows => ({
+  type: types.SHOWS_FETCHED,
   shows
 });
 
@@ -45,9 +47,10 @@ export const addShow = show => {
       data => {
         dispatch(showAdded(data));
         dispatch(setAddShowStatus(STATUS.ADD_SHOW.COMPLETED));
-        dispatch(loadEpisodes([data]));
+        dispatch(fetchEpisodes([data]));
       },
-      () => {
+      (e) => {
+        log(STATUS.FETCH_SHOWS.ERROR + " : " + e);            
         dispatch(setAddShowStatus(STATUS.ADD_SHOW.ERROR));
       }
     );
@@ -76,7 +79,8 @@ export const removeShow = id => {
         dispatch(setRemoveShowStatus(STATUS.REMOVE_SHOW.COMPLETED));
         dispatch(removeEpisodesForShow(id));
       },
-      () => {
+      (e) => {
+        log(STATUS.FETCH_SHOWS.ERROR + " : " + e);            
         dispatch(setRemoveShowStatus(STATUS.REMOVE_SHOW.ERROR));
       }
     );

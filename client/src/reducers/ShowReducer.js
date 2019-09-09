@@ -1,5 +1,5 @@
-import * as TYPES from "../actions/ActionTypes";
-import * as STATUS from "../actions/ActionStatuses";
+import * as TYPES from "../constants/ActionTypes";
+import * as STATUS from "../constants/ActionStatuses";
 
 export const showReducer = (state = [], action) => {
   switch (action.type) {
@@ -7,16 +7,16 @@ export const showReducer = (state = [], action) => {
       return [...state, { id: action.show.id + "", name: action.show.name }];
     case TYPES.SHOW_REMOVED:
       return state.filter(show => show.id !== action.id);
-    case TYPES.SHOWS_LOADED:
+    case TYPES.SHOWS_FETCHED:
       return action.shows;
     default:
       return state;
   }
 };
 
-export const loadShowsStatusReducer = (state=STATUS.LOAD_SHOWS.INITIAL, action) => {
+export const fetchShowsStatusReducer = (state=STATUS.FETCH_SHOWS.INITIAL, action) => {
   switch (action.type) {
-    case TYPES.SET_LOAD_SHOWS_STATUS:
+    case TYPES.SET_FETCH_SHOWS_STATUS:
         return action.status;
     default:
         return state;

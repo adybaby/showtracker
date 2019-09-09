@@ -1,9 +1,9 @@
-export const LOAD_SHOWS = {
-  INITIAL: "LOAD_SHOWS_INITIAL_STATE",
-  IN_PROGRESS: "Loading Shows..",
+export const FETCH_SHOWS = {
+  INITIAL: "FETCH_SHOWS_INITIAL_STATE",
+  IN_PROGRESS: "Fetching Shows..",
   FOUND_SHOWS: "Found shows",
   NO_SHOWS_FOUND: "No shows found",
-  ERROR: "Error loading shows"
+  ERROR: "Error fetching shows"
 };
 
 export const ADD_SHOW = {
@@ -20,10 +20,10 @@ export const REMOVE_SHOW = {
   ERROR: "Error Removing Show"
 };
 
-export const LOAD_EPISODES = {
-  INITIAL: "LOAD_EPISODES_INITIAL_STATE",
-  IN_PROGRESS: "Loading episodes..",
+export const FETCH_EPISODES = {
+  INITIAL: "FETCH_EPISODES_INITIAL_STATE",
+  IN_PROGRESS: "Fetching episodes..",
   FOUND_EPISODES: "Found episodes",
   NO_EPISODES_FOUND: "No episodes found",
-  ERROR: "Error loading episodes"
+  ERROR: "Error fetching episodes"
 };

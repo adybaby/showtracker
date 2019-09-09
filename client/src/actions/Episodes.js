@@ -1,6 +1,7 @@
-import * as TYPES from "./ActionTypes";
-import * as STATUS from "./ActionStatuses";
+import * as TYPES from "../constants/ActionTypes";
+import * as STATUS from "../constants/ActionStatuses";
 import * as server from "../util/ServerInterface";
+import {log} from "../util/Logger";
 
 export const addEpisodes = episodes => ({
   type: TYPES.ADD_EPISODES,
@@ -12,30 +13,36 @@ export const removeEpisodesForShow = showId => ({
   showId
 });
 
-export const loadEpisodes = shows => {
+export const fetchEpisodes = shows => {
   return dispatch => {
-    dispatch(setLoadEpisodesStatus(STATUS.LOAD_EPISODES.IN_PROGRESS));
+    dispatch(setFetchEpisodesStatus(STATUS.FETCH_EPISODES.IN_PROGRESS));
 
-    server.loadEpisodes(
+    server.episodes(
       shows,
       data => {
         if (data.length === 0) {
           dispatch(
-            setLoadEpisodesStatus(STATUS.LOAD_EPISODES.NO_EPISODES_FOUND)
+            setFetchEpisodesStatus(STATUS.FETCH_EPISODES.NO_EPISODES_FOUND)
           );
         } else {
           dispatch(addEpisodes(data));
-          dispatch(setLoadEpisodesStatus(STATUS.LOAD_EPISODES.FOUND_EPISODES));
+          dispatch(setFetchEpisodesStatus(STATUS.FETCH_EPISODES.FOUND_EPISODES));
         }
       },
-      () => {
-        dispatch(setLoadEpisodesStatus(STATUS.LOAD_EPISODES.ERROR));
+      (e) => {
+        log(STATUS.FETCH_EPISODES.ERROR + " : " + e);
+        dispatch(setFetchEpisodesStatus(STATUS.FETCH_EPISODES.ERROR));
       }
     );
   };
 };
 
-export const setLoadEpisodesStatus = status => ({
-  type: TYPES.SET_LOAD_EPISODES_STATUS,
+export const setFetchEpisodesStatus = status => ({
+  type: TYPES.SET_FETCH_EPISODES_STATUS,
   status
+});
+
+export const setEpisodeFilter = filter => ({
+  type: TYPES.SET_EPISODE_FILTER,
+  filter
 });

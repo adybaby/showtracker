@@ -340,3 +340,14 @@ added unique indexes to mongodb and rebuilt indexes such that duplicate shows ca
 removed all redundent methods to make server smaller.
 
 next up: dressing it and pulling in images, probs with bootstrap.
+
+9th September - 10.5hrs
+Lots of refactoring, implemented a Selector for episode visibility, and added Material UI, and a screenshot
+https://material-ui.com/getting-started/installation/
+https://redux.js.org/recipes/computing-derived-data
+Made it mobile responsive too, by using a responsive drawer for show list
+Lots of CSS tidying to do though
+Need to apply Material UI to show finder popup next
+
+
+

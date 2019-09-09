@@ -1,5 +1,6 @@
-import * as TYPES from "../actions/ActionTypes";
-import * as STATUS from "../actions/ActionStatuses";
+import * as TYPES from "../constants/ActionTypes";
+import * as STATUS from "../constants/ActionStatuses";
+import * as EPISODE_FILTERS from "../constants/EpisodeFilters";
 
 export const episodeReducer = (state = [], action) => {
   switch (action.type) {
@@ -12,14 +13,24 @@ export const episodeReducer = (state = [], action) => {
   }
 };
 
-export const loadEpisodesStatusReducer = (
-  state = STATUS.LOAD_EPISODES.INITIAL,
+export const fetchEpisodesStatusReducer = (
+  state = STATUS.FETCH_EPISODES.INITIAL,
   action
 ) => {
   switch (action.type) {
-    case TYPES.SET_LOAD_EPISODES_STATUS:
+    case TYPES.SET_FETCH_EPISODES_STATUS:
       return action.status;
     default:
       return state;
   }
 };
+
+export const episodeFilterReducer = (state = EPISODE_FILTERS.SHOW_NEXT, action) => {
+  switch (action.type) {
+    case TYPES.SET_EPISODE_FILTER:
+      return action.filter;
+    default:
+      return state;
+  }
+};
+

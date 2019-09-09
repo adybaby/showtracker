@@ -5,14 +5,19 @@ import Show from './model';
 const tvdbUrls = JSON.parse(fileSystem.readFileSync('./tvdbroutes.json'));
 
 // adding CORS global exceptiion because stupid Chrome doesn't allow localhost exceptions
-const addCorsException = res => res.header('Access-Control-Allow-Origin', '*');
+const addCorsException = (res, req) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Methods', req.method);
+  res.set('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type');
+  res.set('Access-Control-Allow-Credentials', true);
+};
 
 // MONGO routes
 
 export const addShow = (req, res) => {
-  addCorsException(res);
+  addCorsException(res, req);
 
-  new Show(req.query).save((err, show) => {
+  new Show({ id: req.query.showId, name: req.query.showName }).save((err, show) => {
     if (err) {
       res.send(err.message);
     } else {
@@ -21,25 +26,25 @@ export const addShow = (req, res) => {
   });
 };
 
-export const removeShow = (req, res) =>{
-  addCorsException(res);
+export const removeShow = (req, res) => {
+  addCorsException(res, req);
 
   Show.deleteOne(
     {
-      id: req.query.id,
+      id: req.query.showId,
     },
     (err) => {
       if (err) {
         res.send(err);
       } else {
-        res.json(req.query.id);
+        res.json(req.query.showId);
       }
     },
   );
 };
 
-export async function listShows(req, res) {
-  addCorsException(res);
+export const shows = (req, res) => {
+  addCorsException(res, req);
 
   Show.find({}, (err, showList) => {
     if (err) {
@@ -48,7 +53,7 @@ export async function listShows(req, res) {
       res.json(showList);
     }
   });
-}
+};
 
 // TVDB routes
 
@@ -73,7 +78,7 @@ async function getBearerToken() {
 }
 
 export async function findShow(req, res) {
-  addCorsException(res);
+  addCorsException(res, req);
 
   let bearerToken;
   try {
@@ -86,7 +91,7 @@ export async function findShow(req, res) {
     tvdbUrls.search,
     {
       qs: {
-        name: req.query.name,
+        name: req.query.showName,
       },
       auth: {
         bearer: bearerToken,
@@ -100,10 +105,11 @@ export async function findShow(req, res) {
         if (typeof results === 'undefined') {
           res.json(tvdbRes);
         } else {
-          const shows = results
-            .filter(result => !result.seriesName.includes('403:'))
-            .map(result => ({ id: result.id, name: result.seriesName }));
-          res.json(shows);
+          res.json(
+            results
+              .filter(result => !result.seriesName.includes('403:'))
+              .map(result => ({ id: result.id, name: result.seriesName })),
+          );
         }
       }
     },
@@ -134,18 +140,18 @@ async function getEpisodesForShow(show, bearerToken) {
       (err, tvdbRes) => {
         if (err) reject(err);
         else {
-          const episodes = [];
-          const episodesRes = JSON.parse(tvdbRes.body).data;
+          const returnedEpisodes = JSON.parse(tvdbRes.body).data;
+          const results = [];
 
-          if (typeof episodesRes === 'undefined') {
+          if (typeof returnedEpisodes === 'undefined') {
             reject(Error(`Could not find episodes for show ${show.id}`));
           } else {
-            for (const episode of episodesRes) {
+            for (const episode of returnedEpisodes) {
               if (episode.airedSeason !== 0) {
-                episodes.push(episodeSummary(episode, show));
+                results.push(episodeSummary(episode, show));
               }
             }
-            resolve(episodes);
+            resolve(results);
           }
         }
       },
@@ -153,8 +159,8 @@ async function getEpisodesForShow(show, bearerToken) {
   });
 }
 
-export async function getEpisodes(req, res) {
-  addCorsException(res);
+export async function episodes(req, res) {
+  addCorsException(res, req);
 
   let bearerToken;
   try {
@@ -163,19 +169,68 @@ export async function getEpisodes(req, res) {
     res.send(err.message);
   }
 
-  const episodes = [];
-  const shows = JSON.parse(req.query.shows);
+  const results = [];
+  const showQuery = JSON.parse(req.query.shows);
 
-  for (const show of shows) {
+  for (const show of showQuery) {
     try {
       // eslint-disable-next-line no-await-in-loop
       const episodesForThisShow = await getEpisodesForShow(show, bearerToken);
-      episodes.push(...episodesForThisShow);
+      results.push(...episodesForThisShow);
     } catch (e) {
       // eslint-disable-next-line no-console
       console.log(e);
     }
   }
 
-  res.json(episodes);
+  res.json(results);
+}
+
+async function getBannerURL(queryId, bearerToken) {
+  return new Promise((resolve, reject) => {
+    request.get(
+      `${tvdbUrls.series}/${queryId}`,
+      {
+        auth: {
+          bearer: bearerToken,
+        },
+      },
+      (err, tvdbRes) => {
+        if (err) reject(err);
+        else {
+          resolve(tvdbUrls.banner + JSON.parse(tvdbRes.body).data.banner);
+        }
+      },
+    );
+  });
+}
+
+export function banner(req, res) {
+  addCorsException(res, req);
+
+  getBearerToken(res).then((bearerToken) => {
+    getBannerURL(req.query.showId, bearerToken)
+      .then((bannerURL) => {
+        res.contentType('jpeg');
+        res.setHeader('content-disposition', 'attachment; filename=l316076-g.jpg');
+        request(bannerURL).pipe(res);
+      })
+      .catch((err) => {
+        res.send(err.message);
+      });
+  });
+}
+
+export async function thumb(req, res) {
+  addCorsException(res, req);
+
+  // eslint-disable-next-line no-unused-vars
+  let bearerToken;
+  try {
+    bearerToken = await getBearerToken(res);
+  } catch (err) {
+    res.send(err.message);
+  }
+
+  res.json('TBD');
 }

@@ -1,15 +1,17 @@
 import { combineReducers } from "redux";
-import { showReducer, loadShowsStatusReducer } from "./ShowReducer";
+import { showReducer, fetchShowsStatusReducer } from "./ShowReducer";
 import {
   episodeReducer,
-  loadEpisodesStatusReducer
+  fetchEpisodesStatusReducer,
+  episodeFilterReducer
 } from "./EpisodeReducer";
 
 const rootReducer = combineReducers({
   shows: showReducer,
+  fetchShowsStatus: fetchShowsStatusReducer,
   episodes: episodeReducer,
-  loadShowsStatus: loadShowsStatusReducer,
-  loadEpisodesStatus: loadEpisodesStatusReducer,
+  fetchEpisodesStatus: fetchEpisodesStatusReducer,
+  episodeFilter: episodeFilterReducer
 });
 
 export default rootReducer;
