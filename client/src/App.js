@@ -1,7 +1,7 @@
 import CssBaseline from "@material-ui/core/CssBaseline";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { addShow, fetchShows } from "./actions/Shows";
+import { fetchShows } from "./actions/Shows";
 import ShowList from "./components/ShowList";
 import SearchAndAddPopup from "./components/SearchAndAddPopup";
 import ShowCard from "./components/ShowCardListItem";
@@ -10,18 +10,9 @@ import ResponsiveDrawerLayout from "./components/ResponsiveDrawerLayout";
 import Button from "@material-ui/core/Button";
 import EpisodeFilter from "./components/EpisodeFilter";
 import Divider from "@material-ui/core/Divider";
-import { makeStyles } from "@material-ui/core/styles";
-
-const useStyles = makeStyles(theme => ({
-  addShow: {
-    marginLeft: theme.spacing(0)
-  }
-}));
 
 function App() {
-  const classes = useStyles();
-
-  const [showPopup, setShowPopup] = useState(false);
+  const [addShowVisible, setAddShowVisible] = useState(false);
   const shows = useSelector(state => state.shows);
   const dispatch = useDispatch();
 
@@ -29,12 +20,8 @@ function App() {
     dispatch(fetchShows());
   }, [dispatch]);
 
-  const toggleAddShow = () => {
-    setShowPopup(!showPopup);
-  };
-
-  const handleAddShow = show => {
-    dispatch(addShow(show));
+  const openAddShowDialog = () => {
+    setAddShowVisible(true);
   };
 
   return (
@@ -44,11 +31,11 @@ function App() {
         title="SHOW TRACKER"
         drawerPanel={
           <div>
+            <div>
             <Divider />
             <Button
               color="inherit"
-              onClick={toggleAddShow}
-              className={classes.addShow}
+              onClick={openAddShowDialog}
               size="large"
             >
               Add Shows
@@ -58,6 +45,7 @@ function App() {
               showList={shows}
               ShowComponent = {ShowCard}
             />
+            </div>
           </div>
         }
         mainPanel={<ShowCalendar />}
@@ -68,16 +56,9 @@ function App() {
           </Button>
         ]}
       />
-
-      {showPopup ? (
-        <SearchAndAddPopup
-          handleShowClicked={handleAddShow}
-          closePopup={toggleAddShow}
-        />
-      ) : null}
+      <SearchAndAddPopup open={addShowVisible} setOpen={setAddShowVisible}/>
     </div>
   );
 }
 
 export default App;
-

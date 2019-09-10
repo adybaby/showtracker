@@ -9,47 +9,13 @@ import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import styles from "../Styles";
 
-const drawerWidth = 240;
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: "flex"
-  },
-  drawer: {
-    [theme.breakpoints.up("sm")]: {
-      width: drawerWidth,
-      flexShrink: 0
-    }
-  },
-  appBar: {
-    marginLeft: drawerWidth,
-    [theme.breakpoints.up("sm")]: {
-      width: `calc(100% - ${drawerWidth}px)`
-    }
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up("sm")]: {
-      display: "none"
-    }
-  },
-  toolbar: theme.mixins.toolbar,
-  drawerPaper: {
-    width: drawerWidth
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3)
-  },
-  title: {
-    flexGrow: 1
-  }
-}));
+const useStyles = makeStyles(theme => (styles(theme)));
 
 function ResponsiveDrawer(props) {
-  const { container } = props;
   const classes = useStyles();
+  const { container } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   function handleDrawerToggle() {
@@ -63,11 +29,11 @@ function ResponsiveDrawer(props) {
           color="inherit"
           edge="start"
           onClick={handleDrawerToggle}
-          className={classes.menuButton}
+          className={classes.appBarMenuButton}
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" className={classes.title}>
+        <Typography variant="h6" className={classes.appBarTitle}>
           {props.title}
         </Typography>
         {props.toolbarItems}
@@ -77,7 +43,7 @@ function ResponsiveDrawer(props) {
 
   const drawer = (
     <div>
-      <div className={classes.toolbar} />
+      <div className={classes.drawerToolbar} />
       {props.drawerPanel}
     </div>
   );
@@ -119,8 +85,8 @@ function ResponsiveDrawer(props) {
           </Drawer>
         </Hidden>
       </div>
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
+      <main className={classes.drawerContent}>
+        <div className={classes.drawerToolbar} />
         {props.mainPanel}
       </main>
     </div>

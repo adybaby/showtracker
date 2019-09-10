@@ -1,17 +1,29 @@
-import React, { useState, useEffect, useRef } from "react";
-import ShowList from "./ShowList";
-import * as server from "../util/ServerInterface";
+import React, { useState } from "react";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
 import { useDispatch } from "react-redux";
 import { addShow } from "../actions/Shows";
+import * as server from "../util/ServerInterface";
+import ShowList from "./ShowList";
+import { makeStyles } from "@material-ui/core/styles";
+import styles from "../Styles";
 
-const SearchAndAddPopup = props => {
+const useStyles = makeStyles(theme => (styles(theme)));
+
+const SearchAndAddPopup = ({ open, setOpen }) => {
+  const classes = useStyles();  
   const dispatch = useDispatch();
 
   const SEARCH_STATUS = {
-    NO_SEARCH_DONE: "Enter a show name above and hit search",
+    NO_SEARCH_DONE: "Search results will be shown here",
     IN_PROGRESS: "Searching for shows..",
     FOUND_SHOWS: "Found Shows",
     NO_SHOWS_FOUND: "No shows were found.",
@@ -22,12 +34,6 @@ const SearchAndAddPopup = props => {
   const [searchStatus, setSearchStatus] = useState(
     SEARCH_STATUS.NO_SEARCH_DONE
   );
-
-  const searchBox = useRef(null);
-
-  useEffect(() => {
-    searchBox.current.focus();
-  }, []);
 
   const findShows = () => {
     setSearchStatus(SEARCH_STATUS.IN_PROGRESS);
@@ -52,53 +58,64 @@ const SearchAndAddPopup = props => {
     setSearchTerm(event.target.value);
   };
 
-  const handleSubmitSearch = event => {
-    event.preventDefault();
-    findShows();
-  };
-
-  const Result = ({show}) => (
+  const Result = ({ show }) => (
     <div>
-    <Divider />
-    <ListItem
-      color="inherited"
-      button
-      key={show.id}
-      onClick={() => dispatch(addShow(show))}
-    >
-      <ListItemText primary={show.name} />
-    </ListItem>
-    </div>    
+      <Divider />
+      <ListItem
+        color="inherited"
+        button
+        key={show.id}
+        onClick={() => dispatch(addShow(show))}
+      >
+        <ListItemText primary={show.name} />
+      </ListItem>
+    </div>
   );
 
   return (
-    <div className="popup">
-      <div className="popup_inner">
-        <button onClick={props.closePopup} className="float-right">
-          X
-        </button>
-
-        <h1>Find and Add Shows</h1>
-
-        <form onSubmit={handleSubmitSearch}>
-          <input
-            type="text"
+    <Dialog
+      open={open}
+      onClose={() => setOpen(false)}
+      aria-labelledby="add-show-dialog"
+    >
+      <div className={classes.dialogContent}>
+        <DialogTitle id="add-show-dialog">Add Shows</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Enter the name of a show and click search or hit Enter. Click on a
+            show to add it to your list.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Show Name"
+            type="showName"
             value={searchTerm}
-            ref={searchBox}
-            onChange={handleSearchTermChange}
+            fullWidth
+            onChange={event => handleSearchTermChange(event)}
+            onKeyPress={event => {
+              if (event.key === "Enter") findShows();
+            }}
           />
-          <input type="submit" value="Search" />
-        </form>
-
-        <div className="list">
-          {searchStatus === SEARCH_STATUS.FOUND_SHOWS ? (
-            <ShowList showList={resultsList} ShowComponent={Result} />
-          ) : (
-            <p>{searchStatus}</p>
-          )}
-        </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)} color="primary">
+            Close
+          </Button>
+          <Button onClick={findShows} color="primary">
+            Search
+          </Button>
+        </DialogActions>
       </div>
-    </div>
+      <DialogContent>
+        {searchStatus === SEARCH_STATUS.FOUND_SHOWS ? (
+          <ShowList showList={resultsList} ShowComponent={Result} />
+        ) : (
+          <DialogContentText>{searchStatus}</DialogContentText>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 };
 

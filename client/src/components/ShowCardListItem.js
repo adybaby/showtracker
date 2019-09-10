@@ -1,5 +1,4 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
 import ShowBanner from "./ShowBanner";
@@ -8,34 +7,20 @@ import { removeShow } from "../actions/Shows";
 import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import styles from "../Styles";
 
-const useStyles = makeStyles(theme => ({
-  card: {
-    maxWidth: 345
-  },
-  media: {
-    height: 140
-  },
-  bodyText: {
-    marginLeft: 8,
-    marginTop: 2,
-    marginBottom: 2,
-    fontSize: 13
-  },
-  buttonStyle: {
-    float: "right"
-  }
-}));
+const useStyles = makeStyles(theme => (styles(theme)));
 
 const ShowCard = ({ show }) => {
-  const classes = useStyles();
+  const classes = useStyles();    
   const dispatch = useDispatch();
 
   return (
     <ListItem key={show.id}>
-      <Card className={classes.card} key={show.id}>
+      <Card className={classes.showCard} key={show.id}>
         <ShowBanner show={show} />
-        <Typography color="textSecondary" className={classes.bodyText}>
+        <Typography color="textSecondary" className={classes.showCardBodyText}>
           {show.name}
         </Typography>
         <Divider />
@@ -43,7 +28,7 @@ const ShowCard = ({ show }) => {
           size="small"
           color="primary"
           onClick={() => dispatch(removeShow(show.id))}
-          className="buttonStyle"
+          className={classes.showCardButtonStyle}
         >
           REMOVE SHOW
         </Button>
