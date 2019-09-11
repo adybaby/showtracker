@@ -2,7 +2,7 @@ export const FETCH_SHOWS = {
   INITIAL: "FETCH_SHOWS_INITIAL_STATE",
   IN_PROGRESS: "Fetching Shows..",
   FOUND_SHOWS: "Found shows",
-  NO_SHOWS_FOUND: "No shows found",
+  NO_SHOWS_FOUND: "No shows found.",
   ERROR: "Error fetching shows"
 };
 
@@ -24,6 +24,6 @@ export const FETCH_EPISODES = {
   INITIAL: "FETCH_EPISODES_INITIAL_STATE",
   IN_PROGRESS: "Fetching episodes..",
   FOUND_EPISODES: "Found episodes",
-  NO_EPISODES_FOUND: "No episodes found",
+  NO_EPISODES_FOUND: "No episodes.",
   ERROR: "Error fetching episodes"
 };

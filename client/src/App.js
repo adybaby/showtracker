@@ -25,38 +25,33 @@ function App() {
   };
 
   return (
-    <div>
+    <div style={{width:"100%"}}>
       <CssBaseline />
       <ResponsiveDrawerLayout
         title="SHOW TRACKER"
         drawerPanel={
           <div>
-            <div>
             <Divider />
-            <Button
-              color="inherit"
-              onClick={openAddShowDialog}
-              size="large"
-            >
+            <Button color="inherit" onClick={openAddShowDialog} size="large">
               Add Shows
             </Button>
             <Divider />
-            <ShowList
-              showList={shows}
-              ShowComponent = {ShowCard}
-            />
-            </div>
+            <ShowList showList={shows} ShowComponent={ShowCard} />
           </div>
         }
         mainPanel={<ShowCalendar />}
         toolbarItems={[
-          <EpisodeFilter key="episodeFilter"/>,
-          <Button key ="loginbutton" color="inherit" onClick={() => alert("Not yet implemented")}>
+          <EpisodeFilter key="episodeFilter" />,
+          <Button
+            key="loginbutton"
+            color="inherit"
+            onClick={() => alert("Not yet implemented")}
+          >
             Login
           </Button>
         ]}
       />
-      <SearchAndAddPopup open={addShowVisible} setOpen={setAddShowVisible}/>
+      <SearchAndAddPopup open={addShowVisible} setOpen={setAddShowVisible} />
     </div>
   );
 }

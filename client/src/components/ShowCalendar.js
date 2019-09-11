@@ -30,21 +30,31 @@ export const ShowCalendar = () => {
     case STATUS.FETCH_EPISODES.IN_PROGRESS:
       return (
         <div className={classes.fetchEpisodesStatus}>
-          <CircularProgress />
-          <Typography variant="h5" component="h4">
-          {"    "}{fetchEpisodesStatus}
-          </Typography>       
-        </div>
-      );
-    default:
-      return (
-        <div className={classes.fetchEpisodesStatus}>
-          <Typography variant="h5" component="h4">
+          <CircularProgress className={classes.statusElem} />
+          <Typography
+            className={classes.statusElem}
+            variant="h5"
+            component="h4"
+          >
             {fetchEpisodesStatus}
           </Typography>
         </div>
       );
+    case STATUS.FETCH_EPISODES.ERROR:
+      return (
+        <div className={classes.fetchEpisodesStatus}>
+          <CircularProgress className={classes.statusElem} />
+          <Typography
+            className={classes.statusElem}
+            variant="h5"
+            component="h4"
+          >
+            There was a problem retrieving the episodes.
+          </Typography>
+        </div>
+      );
+    default:
+      return null;
   }
 };
-
 export default ShowCalendar;

@@ -18,7 +18,7 @@ const ShowCard = ({ show }) => {
 
   return (
     <ListItem key={show.id}>
-      <Card className={classes.showCard} key={show.id}>
+      <Card className={classes.showCard}>
         <ShowBanner show={show} />
         <Typography color="textSecondary" className={classes.showCardBodyText}>
           {show.name}

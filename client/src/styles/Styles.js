@@ -3,7 +3,8 @@ const drawerWidth = 260;
 export const styles = theme => ({
   //drawer
   root: {
-    display: "flex"
+    display: "flex",
+    height:"60%"
   },
 
   drawer: {
@@ -22,11 +23,14 @@ export const styles = theme => ({
   },
 
   // fetch episodes status
-  fetchEpisodesStatus: {      
+  fetchEpisodesStatus: {   
     display: 'flex',
     alignItems: 'center',    
     justifyContent: "center",
-    height:"100%"
+    height:"100%",
+    "& *":{
+      margin: theme.spacing(1)
+    }
   },  
 
   //appbar
