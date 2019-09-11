@@ -7,7 +7,7 @@ import List from "@material-ui/core/List";
 import EpisodeCard from "./EpisodeCard";
 import { CircularProgress, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import styles from "../Styles";
+import styles from "../styles/Styles";
 
 const useStyles = makeStyles(theme => styles(theme));
 

@@ -14,7 +14,7 @@ import { addShow } from "../actions/Shows";
 import * as server from "../util/ServerInterface";
 import ShowList from "./ShowList";
 import { makeStyles } from "@material-ui/core/styles";
-import styles from "../Styles";
+import styles from "../styles/Styles";
 
 const useStyles = makeStyles(theme => (styles(theme)));
 

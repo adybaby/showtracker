@@ -4,9 +4,9 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { formatDate } from "../util/Dates";
 import { makeStyles } from "@material-ui/core/styles";
-import styles from "../Styles";
+import styles from "../styles/Styles";
 
-const useStyles = makeStyles(theme => (styles(theme)));
+const useStyles = makeStyles(theme => styles(theme));
 
 const EpisodeCard = ({ episode }) => {
   const classes = useStyles();
@@ -24,7 +24,10 @@ const EpisodeCard = ({ episode }) => {
         <Typography variant="h5" component="h2" gutterBottom>
           {episode.showName}
         </Typography>
-        <Typography className={classes.episodeCardBodyText} color="textSecondary">
+        <Typography
+          className={classes.episodeCardBodyText}
+          color="textSecondary"
+        >
           {episode.episodeName} ({episode.shortName})
         </Typography>
       </CardContent>

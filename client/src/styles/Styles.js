@@ -1,11 +1,11 @@
 const drawerWidth = 260;
 
 export const styles = theme => ({
+  //drawer
   root: {
     display: "flex"
   },
 
-  //drawer
   drawer: {
     [theme.breakpoints.up("sm")]: {
       width: drawerWidth,
@@ -23,11 +23,10 @@ export const styles = theme => ({
 
   // fetch episodes status
   fetchEpisodesStatus: {      
-    padding: theme.spacing(3),   
     display: 'flex',
-    flexDirection: 'column',
     alignItems: 'center',    
-    justifyContent: "center"
+    justifyContent: "center",
+    height:"100%"
   },  
 
   //appbar
@@ -66,7 +65,7 @@ export const styles = theme => ({
 
   //episode card
   episodeCard: {
-    width: "100%"
+    width:"100%"
   },
   episodeCardBodyText: {
     fontSize: 14

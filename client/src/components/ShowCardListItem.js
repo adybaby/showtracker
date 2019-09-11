@@ -8,12 +8,12 @@ import ListItem from "@material-ui/core/ListItem";
 import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import styles from "../Styles";
+import styles from "../styles/Styles";
 
-const useStyles = makeStyles(theme => (styles(theme)));
+const useStyles = makeStyles(theme => styles(theme));
 
 const ShowCard = ({ show }) => {
-  const classes = useStyles();    
+  const classes = useStyles();
   const dispatch = useDispatch();
 
   return (
