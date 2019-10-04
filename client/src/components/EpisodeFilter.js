@@ -43,7 +43,7 @@ const EpisodeFilter = () => {
 
   return (
     <div>
-      <Button variant="outlined" color="inherit" size="small" onClick={handleToggle} ref={anchorRef}>
+      <Button color="inherit" onClick={handleToggle} ref={anchorRef}>
         {filters[selectedIndex]}
         <ArrowDropDownIcon />
       </Button>

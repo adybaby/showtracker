@@ -34,3 +34,14 @@ export const episodeFilterReducer = (state = EPISODE_FILTERS.SHOW_NEXT, action) 
   }
 };
 
+export const showFilterReducer = (state = [], action) => {
+  switch (action.type) {
+    case TYPES.ADD_SHOW_FILTER:
+        return [...state, action.showId];
+    case TYPES.REMOVE_SHOW_FILTER:
+      return state.filter(id=>id !== action.showId);
+    default:
+      return state;
+  }
+};
+

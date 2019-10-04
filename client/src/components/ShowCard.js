@@ -9,12 +9,25 @@ import Divider from "@material-ui/core/Divider";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "../styles/Styles";
+import { addShowFilter, removeShowFilter } from "../actions/Episodes";
+import Checkbox from "@material-ui/core/Checkbox";
+import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import { useAuth0 } from "../react-auth0-wrapper";
 
 const useStyles = makeStyles(theme => styles(theme));
 
 const ShowCard = ({ show }) => {
+  const { user } = useAuth0();
   const classes = useStyles();
   const dispatch = useDispatch();
+
+  const handleChange = name => event => {
+    if (event.target.checked) {
+      dispatch(addShowFilter(show.id));
+    } else {
+      dispatch(removeShowFilter(show.id));
+    }
+  };
 
   return (
     <ListItem key={show.id}>
@@ -24,10 +37,19 @@ const ShowCard = ({ show }) => {
           {show.name}
         </Typography>
         <Divider />
+        <Checkbox
+          icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
+          color="primary"
+          onChange={handleChange()}
+          value="checkedA"
+          inputProps={{
+            "aria-label": "primary checkbox"
+          }}
+        />
         <Button
           size="small"
           color="primary"
-          onClick={() => dispatch(removeShow(show.id))}
+          onClick={() => dispatch(removeShow(user, show.id))}
           className={classes.showCardButtonStyle}
         >
           REMOVE SHOW

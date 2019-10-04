@@ -1,14 +1,20 @@
 import Mongoose from 'mongoose';
 
-const showSchema = Mongoose.Schema({
-  id: {
+const show = Mongoose.Schema({
+  dbId: {
     type: String,
     index: true,
     unique: true,
   },
+  id: {
+    type: String,
+  },
+  userId: {
+    type: String,
+  },
   name: {
     type: String,
-    required: 'Name is required',
+    required: 'Show name is required',
   },
   Created_date: {
     type: Date,
@@ -16,4 +22,4 @@ const showSchema = Mongoose.Schema({
   },
 });
 
-export default Mongoose.model('showtracker', showSchema);
+export default Mongoose.model('show', show);

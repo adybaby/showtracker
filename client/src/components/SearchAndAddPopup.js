@@ -15,10 +15,12 @@ import * as server from "../util/ServerInterface";
 import ShowList from "./ShowList";
 import { makeStyles } from "@material-ui/core/styles";
 import styles from "../styles/Styles";
+import { useAuth0 } from "../react-auth0-wrapper";
 
 const useStyles = makeStyles(theme => (styles(theme)));
 
 const SearchAndAddPopup = ({ open, setOpen }) => {
+  const { user } = useAuth0();  
   const classes = useStyles();  
   const dispatch = useDispatch();
 
@@ -65,7 +67,7 @@ const SearchAndAddPopup = ({ open, setOpen }) => {
         color="inherited"
         button
         key={show.id}
-        onClick={() => dispatch(addShow(show))}
+        onClick={() => dispatch(addShow(user, show))}
       >
         <ListItemText primary={show.name} />
       </ListItem>

@@ -1,6 +1,8 @@
 import fileSystem from 'fs';
 import request from 'request';
-import Show from './model';
+import Show from './model/show';
+import BannerUrl from './model/bannerUrl';
+import log from './Logger';
 
 const tvdbUrls = JSON.parse(fileSystem.readFileSync('./tvdbroutes.json'));
 
@@ -12,13 +14,21 @@ const addCorsException = (res, req) => {
   res.set('Access-Control-Allow-Credentials', true);
 };
 
+const dbId = (userId, showId) => `${userId}_${showId}`;
+
 // MONGO routes
 
 export const addShow = (req, res) => {
   addCorsException(res, req);
 
-  new Show({ id: req.query.showId, name: req.query.showName }).save((err, show) => {
+  new Show({
+    dbId: dbId(req.query.userId, req.query.showId),
+    userId: req.query.userId,
+    id: req.query.showId,
+    name: req.query.showName,
+  }).save((err, show) => {
     if (err) {
+      log(err);
       res.send(err.message);
     } else {
       res.json(show);
@@ -31,10 +41,11 @@ export const removeShow = (req, res) => {
 
   Show.deleteOne(
     {
-      id: req.query.showId,
+      dbId: dbId(req.query.userId, req.query.showId),
     },
     (err) => {
       if (err) {
+        log(err);
         res.send(err);
       } else {
         res.json(req.query.showId);
@@ -46,8 +57,9 @@ export const removeShow = (req, res) => {
 export const shows = (req, res) => {
   addCorsException(res, req);
 
-  Show.find({}, (err, showList) => {
+  Show.find({ userId: req.query.userId }, (err, showList) => {
     if (err) {
+      log(err);
       res.send(err.message);
     } else {
       res.json(showList);
@@ -68,6 +80,7 @@ async function getBearerToken() {
       },
       (err, tvdbRes, body) => {
         if (err) {
+          log(err);
           reject(err);
         } else {
           resolve(body.token);
@@ -84,6 +97,7 @@ export async function findShow(req, res) {
   try {
     bearerToken = await getBearerToken();
   } catch (err) {
+    log(err);
     res.send(err.message);
   }
 
@@ -98,19 +112,25 @@ export async function findShow(req, res) {
       },
     },
     (err, tvdbRes) => {
-      if (err) {
-        res.send(err.message);
-      } else {
-        const results = JSON.parse(tvdbRes.body).data;
-        if (typeof results === 'undefined') {
-          res.json(tvdbRes);
+      try {
+        if (err) {
+          log(err);
+          res.send(err.message);
         } else {
-          res.json(
-            results
-              .filter(result => !result.seriesName.includes('403:'))
-              .map(result => ({ id: result.id, name: result.seriesName })),
-          );
+          const results = JSON.parse(tvdbRes.body).data;
+          if (typeof results === 'undefined') {
+            res.json(tvdbRes);
+          } else {
+            res.json(
+              results
+                .filter(result => !result.seriesName.includes('403:'))
+                .map(result => ({ id: result.id, name: result.seriesName })),
+            );
+          }
         }
+      } catch (unknownErr) {
+        log(unknownErr);
+        res.send(`Unknown error : ${unknownErr}`);
       }
     },
   );
@@ -121,7 +141,7 @@ const episodeShortName = (season, episode) => `S${`0${season}`.slice(-2)}E${`0${
 const episodeSummary = (episode, show) => ({
   showId: show.id,
   showName: show.name,
-  key: episode.id,
+  key: show.id + episode.id,
   episodeName: episode.episodeName,
   shortName: episodeShortName(episode.airedSeason, episode.airedEpisodeNumber),
   airedEpisodeNumber: episode.airedEpisodeNumber,
@@ -138,21 +158,27 @@ async function getEpisodesForShow(show, bearerToken) {
         },
       },
       (err, tvdbRes) => {
-        if (err) reject(err);
-        else {
-          const returnedEpisodes = JSON.parse(tvdbRes.body).data;
-          const results = [];
+        try {
+          if (err) reject(err);
+          else {
+            const returnedEpisodes = JSON.parse(tvdbRes.body).data;
+            const results = [];
 
-          if (typeof returnedEpisodes === 'undefined') {
-            reject(Error(`Could not find episodes for show ${show.id}`));
-          } else {
-            for (const episode of returnedEpisodes) {
-              if (episode.airedSeason !== 0) {
-                results.push(episodeSummary(episode, show));
+            if (typeof returnedEpisodes === 'undefined') {
+              log(err);
+              reject(Error(`Could not find episodes for show ${show.id}`));
+            } else {
+              for (const episode of returnedEpisodes) {
+                if (episode.airedSeason !== 0) {
+                  results.push(episodeSummary(episode, show));
+                }
               }
+              resolve(results);
             }
-            resolve(results);
           }
+        } catch (unknownErr) {
+          log(unknownErr);
+          reject(Error(`Unknown error : ${unknownErr}`));
         }
       },
     );
@@ -177,48 +203,85 @@ export async function episodes(req, res) {
       // eslint-disable-next-line no-await-in-loop
       const episodesForThisShow = await getEpisodesForShow(show, bearerToken);
       results.push(...episodesForThisShow);
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.log(e);
+    } catch (err) {
+      log(err);
     }
   }
 
   res.json(results);
 }
 
-async function getBannerURL(queryId, bearerToken) {
+async function getBannerUrl(showId, bearerToken) {
   return new Promise((resolve, reject) => {
-    request.get(
-      `${tvdbUrls.series}/${queryId}`,
-      {
-        auth: {
-          bearer: bearerToken,
-        },
-      },
-      (err, tvdbRes) => {
+    BannerUrl.findOne({ id: showId }, (err, res) => {
+      try {
         if (err) reject(err);
-        else {
-          resolve(tvdbUrls.banner + JSON.parse(tvdbRes.body).data.banner);
+        else if (res != null && typeof res.bannerUrl !== 'undefined') {
+          resolve(res.bannerUrl);
+        } else {
+          request.get(
+            `${tvdbUrls.series}/${showId}`,
+            {
+              auth: {
+                bearer: bearerToken,
+              },
+            },
+            (tvdbErr, tvdbRes) => {
+              if (tvdbErr) {
+                reject(tvdbErr);
+              } else {
+                const bannerUrl = JSON.parse(tvdbRes.body).data.banner;
+                if (bannerUrl === '') {
+                  resolve('');
+                } else {
+                  new BannerUrl({
+                    id: showId,
+                    bannerUrl,
+                  }).save((dbErr) => {
+                    if (dbErr) {
+                      const msg = `Could not add banner url to db ${dbErr.message}`;
+                      log(msg);
+                      reject(msg);
+                    } else {
+                      resolve(bannerUrl);
+                    }
+                  });
+                }
+              }
+            },
+          );
         }
-      },
-    );
+      } catch (unknownErr) {
+        log(unknownErr);
+        reject(Error(`Unknown error : ${unknownErr}`));
+      }
+    });
   });
 }
 
 export function banner(req, res) {
   addCorsException(res, req);
 
-  getBearerToken(res).then((bearerToken) => {
-    getBannerURL(req.query.showId, bearerToken)
-      .then((bannerURL) => {
-        res.contentType('jpeg');
-        res.setHeader('content-disposition', 'attachment; filename=l316076-g.jpg');
-        request(bannerURL).pipe(res);
-      })
-      .catch((err) => {
-        res.send(err.message);
-      });
-  });
+  try {
+    getBearerToken(res).then((bearerToken) => {
+      getBannerUrl(req.query.showId, bearerToken)
+        .then((bannerUrl) => {
+          if (bannerUrl === '') {
+            res.status(404);
+          }
+          res.contentType('jpeg');
+          res.setHeader('content-disposition', 'attachment; filename=l316076-g.jpg');
+          request(tvdbUrls.banner + bannerUrl).pipe(res);
+        })
+        .catch((err) => {
+          log(err);
+          res.send(err.message);
+        });
+    });
+  } catch (err) {
+    log(err);
+    res.send(err.message);
+  }
 }
 
 export async function thumb(req, res) {
@@ -229,6 +292,7 @@ export async function thumb(req, res) {
   try {
     bearerToken = await getBearerToken(res);
   } catch (err) {
+    log(err);
     res.send(err.message);
   }
 

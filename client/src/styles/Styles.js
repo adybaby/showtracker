@@ -52,6 +52,7 @@ export const styles = theme => ({
 
   //show card
   showCard: {
+    width: "100%",
     maxWidth: 345
   },
   showCardMedia: {
@@ -65,6 +66,11 @@ export const styles = theme => ({
   },
   showCardButtonStyle: {
     float: "right"
+  },
+  showCardControls: {
+    color: 'red',
+    align: 'center',
+    justifyContent: 'center'
   },
 
   //episode card

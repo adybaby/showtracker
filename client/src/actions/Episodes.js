@@ -46,3 +46,13 @@ export const setEpisodeFilter = filter => ({
   type: TYPES.SET_EPISODE_FILTER,
   filter
 });
+
+export const addShowFilter = showId => ({
+  type: TYPES.ADD_SHOW_FILTER,
+  showId
+});
+
+export const removeShowFilter = showId => ({
+  type: TYPES.REMOVE_SHOW_FILTER,
+  showId
+});

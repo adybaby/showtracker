@@ -5,11 +5,12 @@ import * as server from "../util/ServerInterface";
 import {log} from "../util/Logger";
 
 //load
-export const fetchShows = () => {
+export const fetchShows = user => {
   return dispatch => {
     dispatch(setFetchShowsStatus(STATUS.FETCH_SHOWS.IN_PROGRESS));
 
     server.shows(
+      user,
       data => {
         if (data.length === 0) {
           dispatch(setFetchShowsStatus(STATUS.FETCH_SHOWS.NO_SHOWS_FOUND));
@@ -38,11 +39,12 @@ export const showsFetched = shows => ({
 });
 
 //add
-export const addShow = show => {
+export const addShow = (user, show) => {
   return dispatch => {
     dispatch(setAddShowStatus(STATUS.ADD_SHOW.IN_PROGRESS));
 
     server.addShow(
+      user,
       show,
       data => {
         dispatch(showAdded(data));
@@ -68,13 +70,15 @@ export const showAdded = show => ({
 });
 
 //remove
-export const removeShow = id => {
+export const removeShow = (user, id) => {
   return dispatch => {
     dispatch(setRemoveShowStatus(STATUS.REMOVE_SHOW.IN_PROGRESS));
 
     server.removeShow(
+      user,
       id,
       data => {
+        console.log(data);
         dispatch(showRemoved(data));
         dispatch(setRemoveShowStatus(STATUS.REMOVE_SHOW.COMPLETED));
         dispatch(removeEpisodesForShow(id));

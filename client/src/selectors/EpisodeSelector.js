@@ -3,8 +3,9 @@ import * as EPISODE_FILTERS from "../constants/EpisodeFilters";
 
 const getEpisodeFilter = state => state.episodeFilter;
 const getEpisodes = state => state.episodes;
+const getShowFilter = state => state.showFilter;
 
-export const getVisibleEpisodes = createSelector(
+const filterByEpisode = createSelector(
   [getEpisodeFilter, getEpisodes],
   (episodeFilter, episodes) => {
     const sortedEpisodes = sortEpisodesByDate(episodes);
@@ -17,6 +18,21 @@ export const getVisibleEpisodes = createSelector(
         return getFutureEpisodes(sortedEpisodes);
       default:
         return sortedEpisodes;
+    }
+  }
+);
+
+export const getVisibleEpisodes = createSelector(
+  [filterByEpisode, getShowFilter],
+  (episodes, showFilter) => {
+    if (showFilter.length === 0) return episodes;
+    else {
+      return episodes.filter(episode => {
+        for (const showId of showFilter) {        
+          if (showId === episode.showId ) return true;
+        }
+        return false;
+      });
     }
   }
 );

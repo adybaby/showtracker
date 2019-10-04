@@ -347,17 +347,30 @@ https://material-ui.com/getting-started/installation/
 https://redux.js.org/recipes/computing-derived-data
 Made it mobile responsive too, by using a responsive drawer for show list
 
+18th sept - 4 hrs
+fixing bugs and issues (below)
+
+4 oct - 9 hrs
+setup and integrated user authentication via auth0
+changed db to give different show lists for different users
+changed db to add a banner cache url seperate from user show lists
+refactored components to reduce server load (showpanel)
+tidied server interface
+added second filter for specific show
+
 TODO
-/done-redundant Put image loading into show item so don't need to server call every time an image is needed (with flag to omit for searching for shows)
-/done Lots of CSS tidying
-/done Need to apply Material UI to show finder popup next
+/done-redundant: Put image loading into show item so don't need to server call every time an image is needed (with flag to omit for searching for shows)
+/done: Lots of CSS tidying
+/done: Need to apply Material UI to show finder popup next
 (above 3 - 3 hrs)
-/done why won't the fetch message vertically centre!? i hate css - 11 sept (2hrs)
-test: add bad show, no banner available, empty shows, no episodes, 
-Add Month heading to calendar
+/done: why won't the fetch message vertically centre!? i hate css - 11 sept (2hrs)
+/done: test: add bad show, no banner available, empty shows, no episodes, (2hrs)
 Different calendar views
-Second filter for a particular show
-Implement login
+/better without?: Add Month heading to calendar
+/done Second filter for a particular show
+/done: bug: dates are all the same
+/done bug: filter isn't formatted properly. CANT FIX!?? I HATE CSS. ESP. WITH MATERIAL UI.
+/done Implement login
 Sort Aria and keyboard nav
 try docker
 upload to server hosting

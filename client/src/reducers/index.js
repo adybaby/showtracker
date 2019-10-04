@@ -3,7 +3,8 @@ import { showReducer, fetchShowsStatusReducer } from "./ShowReducer";
 import {
   episodeReducer,
   fetchEpisodesStatusReducer,
-  episodeFilterReducer
+  episodeFilterReducer,
+  showFilterReducer
 } from "./EpisodeReducer";
 
 const rootReducer = combineReducers({
@@ -11,7 +12,8 @@ const rootReducer = combineReducers({
   fetchShowsStatus: fetchShowsStatusReducer,
   episodes: episodeReducer,
   fetchEpisodesStatus: fetchEpisodesStatusReducer,
-  episodeFilter: episodeFilterReducer
+  episodeFilter: episodeFilterReducer,
+  showFilter: showFilterReducer
 });
 
 export default rootReducer;
