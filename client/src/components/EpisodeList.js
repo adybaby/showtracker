@@ -1,13 +1,13 @@
+import { CircularProgress, Typography } from "@material-ui/core";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import { makeStyles } from "@material-ui/core/styles";
 import React from "react";
 import { useSelector } from "react-redux";
 import * as STATUS from "../constants/ActionStatuses";
 import getVisibleEpisodes from "../selectors/EpisodeSelector";
-import ListItem from "@material-ui/core/ListItem";
-import List from "@material-ui/core/List";
-import EpisodeCard from "./EpisodeCard";
-import { CircularProgress, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
 import styles from "../styles/Styles";
+import EpisodeCard from "./EpisodeCard";
 
 const useStyles = makeStyles(theme => styles(theme));
 

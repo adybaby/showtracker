@@ -1,5 +1,5 @@
-import * as TYPES from "../constants/ActionTypes";
 import * as STATUS from "../constants/ActionStatuses";
+import * as TYPES from "../constants/ActionTypes";
 
 export const showReducer = (state = [], action) => {
   switch (action.type) {

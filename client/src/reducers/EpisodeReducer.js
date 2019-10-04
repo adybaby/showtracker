@@ -1,5 +1,5 @@
-import * as TYPES from "../constants/ActionTypes";
 import * as STATUS from "../constants/ActionStatuses";
+import * as TYPES from "../constants/ActionTypes";
 import * as EPISODE_FILTERS from "../constants/EpisodeFilters";
 
 export const episodeReducer = (state = [], action) => {

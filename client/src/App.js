@@ -1,21 +1,21 @@
-import React, { useEffect } from "react";
-import ShowPanel from "./components/ShowPanel";
-import EpisodeList from "./components/EpisodeList";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import NoUser from "./components/NoUser";
-import Button from "@material-ui/core/Button";
-import EpisodeFilter from "./components/EpisodeFilter";
-import { useAuth0 } from "./react-auth0-wrapper";
 import AppBar from "@material-ui/core/AppBar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
+import { makeStyles } from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
+import MenuIcon from "@material-ui/icons/Menu";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchShows } from "./actions/Shows";
+import EpisodeFilter from "./components/EpisodeFilter";
+import EpisodeList from "./components/EpisodeList";
+import NoUser from "./components/NoUser";
+import ShowPanel from "./components/ShowPanel";
+import { useAuth0 } from "./react-auth0-wrapper";
 import styles from "./styles/Styles";
 
 const useStyles = makeStyles(theme => styles(theme));
@@ -48,7 +48,7 @@ function App() {
 
   return (
 
-    <div style={{ width: "100%" }}>
+    <div className={classes.background}>
       <CssBaseline />
       <div className={classes.root}>
         <AppBar position="fixed" className={classes.appBar}>
@@ -77,7 +77,7 @@ function App() {
               )}
               {isAuthenticated && (
                 <Button
-                  key="loginbutton"
+                  key="logoutbutton"
                   color="inherit"
                   onClick={() => logout()}
                 >

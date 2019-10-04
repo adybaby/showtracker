@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import * as server from "../util/ServerInterface";
 
 const ShowBanner = ({ show }) => {

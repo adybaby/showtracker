@@ -1,21 +1,21 @@
-import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Divider from "@material-ui/core/Divider";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import Divider from "@material-ui/core/Divider";
+import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addShow } from "../actions/Shows";
+import { useAuth0 } from "../react-auth0-wrapper";
+import styles from "../styles/Styles";
 import * as server from "../util/ServerInterface";
 import ShowList from "./ShowList";
-import { makeStyles } from "@material-ui/core/styles";
-import styles from "../styles/Styles";
-import { useAuth0 } from "../react-auth0-wrapper";
 
 const useStyles = makeStyles(theme => (styles(theme)));
 

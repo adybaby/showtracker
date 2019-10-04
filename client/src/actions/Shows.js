@@ -1,8 +1,8 @@
-import * as types from "../constants/ActionTypes";
 import * as STATUS from "../constants/ActionStatuses";
-import { fetchEpisodes, removeEpisodesForShow } from "./Episodes";
+import * as types from "../constants/ActionTypes";
+import { log } from "../util/Logger";
 import * as server from "../util/ServerInterface";
-import {log} from "../util/Logger";
+import { fetchEpisodes, removeEpisodesForShow } from "./Episodes";
 
 //load
 export const fetchShows = user => {

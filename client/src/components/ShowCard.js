@@ -1,18 +1,18 @@
-import React from "react";
-import Card from "@material-ui/core/Card";
 import Button from "@material-ui/core/Button";
-import ShowBanner from "./ShowBanner";
-import { useDispatch } from "react-redux";
-import { removeShow } from "../actions/Shows";
-import ListItem from "@material-ui/core/ListItem";
-import Divider from "@material-ui/core/Divider";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import styles from "../styles/Styles";
-import { addShowFilter, removeShowFilter } from "../actions/Episodes";
+import Card from "@material-ui/core/Card";
 import Checkbox from "@material-ui/core/Checkbox";
+import Divider from "@material-ui/core/Divider";
+import ListItem from "@material-ui/core/ListItem";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import CheckBoxOutlineBlankIcon from "@material-ui/icons/CheckBoxOutlineBlank";
+import React from "react";
+import { useDispatch } from "react-redux";
+import { addShowFilter, removeShowFilter } from "../actions/Episodes";
+import { removeShow } from "../actions/Shows";
 import { useAuth0 } from "../react-auth0-wrapper";
+import styles from "../styles/Styles";
+import ShowBanner from "./ShowBanner";
 
 const useStyles = makeStyles(theme => styles(theme));
 

@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import ShowList from "./ShowList";
-import ShowCard from "./ShowCard";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
+import React, { useState } from "react";
 import SearchAndAddPopup from "./SearchAndAddPopup";
+import ShowCard from "./ShowCard";
+import ShowList from "./ShowList";
 
 const ShowPanel = ({shows}) => {
   const [addShowVisible, setAddShowVisible] = useState(false);

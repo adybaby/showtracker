@@ -1,7 +1,7 @@
-import * as TYPES from "../constants/ActionTypes";
 import * as STATUS from "../constants/ActionStatuses";
+import * as TYPES from "../constants/ActionTypes";
+import { log } from "../util/Logger";
 import * as server from "../util/ServerInterface";
-import {log} from "../util/Logger";
 
 export const addEpisodes = episodes => ({
   type: TYPES.ADD_EPISODES,

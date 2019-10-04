@@ -1,11 +1,6 @@
 import { combineReducers } from "redux";
-import { showReducer, fetchShowsStatusReducer } from "./ShowReducer";
-import {
-  episodeReducer,
-  fetchEpisodesStatusReducer,
-  episodeFilterReducer,
-  showFilterReducer
-} from "./EpisodeReducer";
+import { episodeFilterReducer, episodeReducer, fetchEpisodesStatusReducer, showFilterReducer } from "./EpisodeReducer";
+import { fetchShowsStatusReducer, showReducer } from "./ShowReducer";
 
 const rootReducer = combineReducers({
   shows: showReducer,

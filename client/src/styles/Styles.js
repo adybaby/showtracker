@@ -1,6 +1,33 @@
+import Background from '../images/movie-film-video-production-ss-1920.jpg';
+
 const drawerWidth = 260;
 
 export const styles = theme => ({
+//main
+
+background: {
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: "100%",
+  height: "100%",  
+  backgroundImage: `url(${Background})`,
+  backgroundPosition: "center",
+  backgroundRepeat: "no-repeat",
+  backgroundSize: "cover"  
+},
+
+introBox: {   
+  display: 'flex',
+  flexDirection: "column",
+  alignItems: 'left',    
+  justifyContent: "top",
+  marginTop: "10%",
+  height:"100%",
+  "& *":{
+    margin: theme.spacing(2)
+  }
+},  
   //drawer
   root: {
     display: "flex",
