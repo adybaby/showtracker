@@ -18,7 +18,7 @@ const NoUser = () => {
       <AppBar>
         <Toolbar>
           <Typography variant="h6" className={classes.appBarTitle}>
-            SHOWTRACKER
+            THE SHOWTRACKER
           </Typography>
           <Button
             key="loginbutton"

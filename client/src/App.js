@@ -20,7 +20,7 @@ import styles from "./styles/Styles";
 
 const useStyles = makeStyles(theme => styles(theme));
 
-function App() {
+const App = () => {
   const classes = useStyles();
   const [showDrawer, setShowDrawer] = React.useState(false);
   const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
@@ -42,12 +42,11 @@ function App() {
     return <NoUser />;
   }
 
-  function handleDrawerToggle() {
+  const handleDrawerToggle = () => {
     setShowDrawer(!showDrawer);
-  }
+  };
 
   return (
-
     <div className={classes.background}>
       <CssBaseline />
       <div className={classes.root}>
@@ -130,6 +129,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
 export default App;

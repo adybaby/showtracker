@@ -78,7 +78,6 @@ export const removeShow = (user, id) => {
       user,
       id,
       data => {
-        console.log(data);
         dispatch(showRemoved(data));
         dispatch(setRemoveShowStatus(STATUS.REMOVE_SHOW.COMPLETED));
         dispatch(removeEpisodesForShow(id));

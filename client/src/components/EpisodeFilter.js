@@ -24,22 +24,22 @@ const EpisodeFilter = () => {
   const [open, setOpen] = React.useState(false);
   const [selectedIndex, setSelectedIndex] = React.useState(2);
 
-  function handleMenuItemClick(event, index) {
+  const handleMenuItemClick = (event, index) => {
     setSelectedIndex(index);
     setOpen(false);
     dispatch(setEpisodeFilter(filters[index]));
-  }
+  };
 
-  function handleToggle() {
+  const handleToggle = () => {
     setOpen(prevOpen => !prevOpen);
-  }
+  };
 
-  function handleClose(event) {
+  const handleClose = event => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
     setOpen(false);
-  }
+  };
 
   return (
     <div>

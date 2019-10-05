@@ -16,7 +16,7 @@ const ShowPanel = ({shows}) => {
     <div style={{ width: "100%" }}>
       <Divider />
       <Button color="inherit" onClick={openAddShowDialog} size="large">
-        Add Shows
+        ADD SHOWS
       </Button>
       <Divider />
       <ShowList showList={shows} ShowComponent={ShowCard} />
