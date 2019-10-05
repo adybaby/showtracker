@@ -1,4 +1,6 @@
-﻿This project is split into two seperate components - a Node Server (/server), and a React client (/client).  The server wraps TVDB calls for show information, and so requires an API key specified in your environment variables.
+﻿THE SHOWTRACKER let's you add your favourite shows and then see when they are airing, updating live from TVDB.
+
+This project is split into two seperate components - a Node Server (/server), and a React client (/client).  The server wraps TVDB calls for show information, and so requires an API key specified in your environment variables.
 
 **you must run two seperate instances each for the server and client**
 
