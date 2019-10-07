@@ -2,40 +2,40 @@ import Background from '../images/movie-film-video-production-ss-1920.jpg';
 
 const drawerWidth = 260;
 
-export const styles = theme => ({
-//main
+const styles = (theme) => ({
+// main
 
-background: {
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-  width: "100%",
-  height: "100%",  
-  backgroundImage: `url(${Background})`,
-  backgroundPosition: "center",
-  backgroundRepeat: "no-repeat",
-  backgroundSize: "cover"  
-},
+  background: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    backgroundImage: `url(${Background})`,
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover'
+  },
 
-introBox: {   
-  display: 'flex',
-  flexDirection: "column",
-  alignItems: 'left',    
-  justifyContent: "top",
-  marginTop: "10%",
-  height:"100%",
-  "& *":{
-    margin: theme.spacing(2)
-  }
-},  
-  //drawer
+  introBox: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'left',
+    justifyContent: 'top',
+    marginTop: '10%',
+    height: '100%',
+    '& *': {
+      margin: theme.spacing(2)
+    }
+  },
+  // drawer
   root: {
-    display: "flex",
-    height:"60%"
+    display: 'flex',
+    height: '60%'
   },
 
   drawer: {
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up('sm')]: {
       width: drawerWidth,
       flexShrink: 0
     }
@@ -50,41 +50,41 @@ introBox: {
   },
 
   // fetch episodes status
-  fetchEpisodesStatus: {   
+  fetchEpisodesStatus: {
     display: 'flex',
-    alignItems: 'center',    
-    justifyContent: "center",
-    height:"100%",
-    "& *":{
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    '& *': {
       margin: theme.spacing(1)
     }
-  },  
+  },
 
-  //appbar
+  // appbar
   appBar: {
     marginLeft: drawerWidth,
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up('sm')]: {
       width: `calc(100% - ${drawerWidth}px)`
     }
   },
   appBarMenuButton: {
     marginRight: theme.spacing(2),
-    [theme.breakpoints.up("sm")]: {
-      display: "none"
+    [theme.breakpoints.up('sm')]: {
+      display: 'none'
     }
   },
   appBarTitle: {
     flexGrow: 1
   },
 
-  //show card
+  // show card
   showCard: {
-    width: "100%",
+    width: '100%',
     maxWidth: 345
   },
   showCardMedia: {
     height: 140
-  },  
+  },
   showCardBodyText: {
     marginLeft: 8,
     marginTop: 2,
@@ -92,7 +92,7 @@ introBox: {
     fontSize: 13
   },
   showCardButtonStyle: {
-    float: "right"
+    float: 'right'
   },
   showCardControls: {
     color: 'red',
@@ -100,9 +100,9 @@ introBox: {
     justifyContent: 'center'
   },
 
-  //episode card
+  // episode card
   episodeCard: {
-    width:"100%"
+    width: '100%'
   },
   episodeCardBodyText: {
     fontSize: 14

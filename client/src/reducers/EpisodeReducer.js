@@ -1,13 +1,13 @@
-import * as STATUS from "../constants/ActionStatuses";
-import * as TYPES from "../constants/ActionTypes";
-import * as EPISODE_FILTERS from "../constants/EpisodeFilters";
+import * as STATUS from '../constants/ActionStatuses';
+import * as TYPES from '../constants/ActionTypes';
+import * as EPISODE_FILTERS from '../constants/EpisodeFilters';
 
 export const episodeReducer = (state = [], action) => {
   switch (action.type) {
     case TYPES.ADD_EPISODES:
       return state.concat(action.episodes);
     case TYPES.REMOVE_EPISODES:
-      return state.filter(episode => episode.showId !== action.showId);
+      return state.filter((episode) => episode.showId !== action.showId);
     default:
       return state;
   }
@@ -37,11 +37,10 @@ export const episodeFilterReducer = (state = EPISODE_FILTERS.SHOW_NEXT, action) 
 export const showFilterReducer = (state = [], action) => {
   switch (action.type) {
     case TYPES.ADD_SHOW_FILTER:
-        return [...state, action.showId];
+      return [...state, action.showId];
     case TYPES.REMOVE_SHOW_FILTER:
-      return state.filter(id=>id !== action.showId);
+      return state.filter((id) => id !== action.showId);
     default:
       return state;
   }
 };
-

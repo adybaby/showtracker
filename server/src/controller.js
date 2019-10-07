@@ -146,9 +146,10 @@ const episodeSummary = (episode, show) => ({
   firstAired: episode.firstAired,
 });
 
-const getEpisodesForShow = async (show, bearerToken) => new Promise((resolve, reject) => {
+// eslint-disable-next-line max-len
+const getEpisodesForShowByPage = async (show, page, bearerToken) => new Promise((resolve, reject) => {
   request.get(
-    `${tvdbUrls.series}/${show.id}$/episodes`,
+    `${tvdbUrls.series}/${show.id}/episodes?page=${page}`,
     {
       auth: {
         bearer: bearerToken,
@@ -162,8 +163,7 @@ const getEpisodesForShow = async (show, bearerToken) => new Promise((resolve, re
           const results = [];
 
           if (typeof returnedEpisodes === 'undefined') {
-            log(err);
-            reject(Error(`Could not find episodes for show ${show.id}`));
+            resolve([]);
           } else {
             for (const episode of returnedEpisodes) {
               if (episode.airedSeason !== 0) {
@@ -180,6 +180,31 @@ const getEpisodesForShow = async (show, bearerToken) => new Promise((resolve, re
     },
   );
 });
+
+const getEpisodesForShow = async (show, bearerToken) => {
+  let done = false;
+  let page = 1;
+  const allEpisodes = [];
+  do {
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      const episodesForThisShow = await getEpisodesForShowByPage(show, page, bearerToken);
+      if (episodesForThisShow.length === 0) {
+        done = true;
+      } else {
+        allEpisodes.push(...episodesForThisShow);
+        if (episodesForThisShow.length < 50) {
+          done = true;
+        } else {
+          page += 1;
+        }
+      }
+    } catch (err) {
+      done = true;
+    }
+  } while (!done);
+  return allEpisodes;
+};
 
 export const episodes = async (req, res) => {
   addCorsException(res, req);
@@ -261,11 +286,12 @@ export const banner = (req, res) => {
       getBannerUrl(req.query.showId, bearerToken)
         .then((bannerUrl) => {
           if (bannerUrl === '') {
-            res.status(404);
+            res.status(404).send(`No banner found for show ID ${req.query.showId}`);
+          } else {
+            res.contentType('jpeg');
+            res.setHeader('content-disposition', 'attachment; filename=l316076-g.jpg');
+            request(tvdbUrls.banner + bannerUrl).pipe(res);
           }
-          res.contentType('jpeg');
-          res.setHeader('content-disposition', 'attachment; filename=l316076-g.jpg');
-          request(tvdbUrls.banner + bannerUrl).pipe(res);
         })
         .catch((err) => {
           log(err);

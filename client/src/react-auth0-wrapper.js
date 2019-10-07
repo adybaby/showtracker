@@ -1,9 +1,11 @@
+/* eslint-disable no-shadow */
 // this is all untouched Auth0 boilerplate code to access Auth0 functions as react hooks
-import React, { useState, useEffect, useContext } from "react";
-import createAuth0Client from "@auth0/auth0-spa-js";
+import React, { useState, useEffect, useContext } from 'react';
+import createAuth0Client from '@auth0/auth0-spa-js';
+import log from './util/Logger';
 
-const DEFAULT_REDIRECT_CALLBACK = () =>
-  window.history.replaceState({}, document.title, window.location.pathname);
+const DEFAULT_REDIRECT_CALLBACK = () => window.history.replaceState({},
+  document.title, window.location.pathname);
 
 export const Auth0Context = React.createContext();
 export const useAuth0 = () => useContext(Auth0Context);
@@ -23,7 +25,7 @@ export const Auth0Provider = ({
       const auth0FromHook = await createAuth0Client(initOptions);
       setAuth0(auth0FromHook);
 
-      if (window.location.search.includes("code=")) {
+      if (window.location.search.includes('code=')) {
         const { appState } = await auth0FromHook.handleRedirectCallback();
         onRedirectCallback(appState);
       }
@@ -48,7 +50,7 @@ export const Auth0Provider = ({
     try {
       await auth0Client.loginWithPopup(params);
     } catch (error) {
-      console.error(error);
+      log(error);
     } finally {
       setPopupOpen(false);
     }

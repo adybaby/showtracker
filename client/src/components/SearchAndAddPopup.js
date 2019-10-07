@@ -1,38 +1,38 @@
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import Divider from "@material-ui/core/Divider";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { addShow } from "../actions/Shows";
-import { useAuth0 } from "../react-auth0-wrapper";
-import styles from "../styles/Styles";
-import * as server from "../util/ServerInterface";
-import ShowList from "./ShowList";
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Divider from '@material-ui/core/Divider';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addShow } from '../actions/Shows';
+import { useAuth0 } from '../react-auth0-wrapper';
+import styles from '../styles/Styles';
+import * as server from '../util/ServerInterface';
+import ShowList from './ShowList';
 
-const useStyles = makeStyles(theme => (styles(theme)));
+const useStyles = makeStyles((theme) => (styles(theme)));
 
 const SearchAndAddPopup = ({ open, setOpen }) => {
-  const { user } = useAuth0();  
-  const classes = useStyles();  
+  const { user } = useAuth0();
+  const classes = useStyles();
   const dispatch = useDispatch();
 
   const SEARCH_STATUS = {
-    NO_SEARCH_DONE: "Search results will be shown here",
-    IN_PROGRESS: "Searching for shows..",
-    FOUND_SHOWS: "Found Shows",
-    NO_SHOWS_FOUND: "No shows were found.",
-    ERROR: "Error Searching for Shows"
+    NO_SEARCH_DONE: 'Search results will be shown here',
+    IN_PROGRESS: 'Searching for shows..',
+    FOUND_SHOWS: 'Found Shows',
+    NO_SHOWS_FOUND: 'No shows were found.',
+    ERROR: 'Error Searching for Shows'
   };
   const [resultsList, setResultsList] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [searchStatus, setSearchStatus] = useState(
     SEARCH_STATUS.NO_SEARCH_DONE
   );
@@ -41,7 +41,7 @@ const SearchAndAddPopup = ({ open, setOpen }) => {
     setSearchStatus(SEARCH_STATUS.IN_PROGRESS);
     server.findShows(
       searchTerm,
-      data => {
+      (data) => {
         if (data.length > 0) {
           setResultsList(data);
           setSearchStatus(SEARCH_STATUS.FOUND_SHOWS);
@@ -56,7 +56,7 @@ const SearchAndAddPopup = ({ open, setOpen }) => {
     );
   };
 
-  const handleSearchTermChange = event => {
+  const handleSearchTermChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
@@ -95,9 +95,9 @@ const SearchAndAddPopup = ({ open, setOpen }) => {
             type="showName"
             value={searchTerm}
             fullWidth
-            onChange={event => handleSearchTermChange(event)}
-            onKeyPress={event => {
-              if (event.key === "Enter") findShows();
+            onChange={(event) => handleSearchTermChange(event)}
+            onKeyPress={(event) => {
+              if (event.key === 'Enter') findShows();
             }}
           />
         </DialogContent>

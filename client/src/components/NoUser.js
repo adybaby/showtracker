@@ -1,13 +1,13 @@
-import AppBar from "@material-ui/core/AppBar";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
-import Toolbar from "@material-ui/core/Toolbar";
-import Typography from "@material-ui/core/Typography";
-import React from "react";
-import { useAuth0 } from "../react-auth0-wrapper";
-import styles from "../styles/Styles";
+import AppBar from '@material-ui/core/AppBar';
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import React from 'react';
+import { useAuth0 } from '../react-auth0-wrapper';
+import styles from '../styles/Styles';
 
-const useStyles = makeStyles(theme => styles(theme));
+const useStyles = makeStyles((theme) => styles(theme));
 
 const NoUser = () => {
   const { loginWithRedirect } = useAuth0();
@@ -34,10 +34,10 @@ const NoUser = () => {
         <Typography className={classes.statusElem} variant="h5" component="h4">
           Showtracker lets you add your favourite shows, then uses TVDB to show
           you when those shows air. Click LOGIN above to sign up or log in. When
-          you're signed in, click ADD SHOWS to start adding your favourite
+          you&apos;re signed in, click ADD SHOWS to start adding your favourite
           shows!
-        </Typography>   
-        </div>    
+        </Typography>
+        </div>
       </div>
     </div>
   );
