@@ -358,6 +358,10 @@ refactored components to reduce server load (showpanel)
 tidied server interface
 added second filter for specific show
 
+14 oct - 5 hrs
+refactoring server side to seperate mongo and tvdb calls from controller, in prep for arctic cloud 
+optimised server calls to tvdb to multithread when calling episode lists
+
 TODO
 /done-redundant: Put image loading into show item so don't need to server call every time an image is needed (with flag to omit for searching for shows)
 /done: Lots of CSS tidying

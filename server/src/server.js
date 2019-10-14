@@ -1,7 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
-import routes from './routes';
+import routes from './Routes';
 
 const app = express();
 const port = process.env.PORT || 3000;

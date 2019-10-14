@@ -1,4 +1,4 @@
-import * as Ctrl from './controller';
+import * as Ctrl from './Controller';
 
 module.exports = function routes(app) {
   // MONGO routes
@@ -7,7 +7,7 @@ module.exports = function routes(app) {
   app.route('/shows').get(Ctrl.shows);
 
   // TVDB routes
-  app.route('/findshow').get(Ctrl.findShow);
+  app.route('/findshow').get(Ctrl.findShows);
   app.route('/episodes').get(Ctrl.episodes);
   app.route('/banner').get(Ctrl.banner);
 };
