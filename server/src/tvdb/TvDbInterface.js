@@ -1,16 +1,21 @@
 import request from 'request';
-import fileSystem from 'fs';
 import * as db from '../mongo/MongoInterface';
 
-const tvdbUrls = JSON.parse(fileSystem.readFileSync('./tvdbroutes.json'));
-const apiKey = process.env.TVDB_API_KEY;
-
+let urls;
+let apiKey;
 let bearerToken;
 
+export const tvdbInit = (tvdbUrls, tvdbApiKey) => {
+  urls = tvdbUrls;
+  apiKey = tvdbApiKey;
+};
+
 const checkBearerToken = () => new Promise((resolve, reject) => {
-  if (typeof bearerToken === 'undefined') {
+  if (typeof bearerToken !== 'undefined') {
+    resolve(bearerToken);
+  } else {
     request.post(
-      tvdbUrls.login,
+      urls.login,
       {
         json: {
           apikey: apiKey,
@@ -34,7 +39,7 @@ export const findShows = showName => new Promise((resolve, reject) => {
   checkBearerToken()
     .then(() => {
       request.get(
-        tvdbUrls.search,
+        urls.search,
         {
           qs: {
             name: showName,
@@ -74,7 +79,7 @@ export const findShows = showName => new Promise((resolve, reject) => {
 
 const getEpisodesForShowByPage = (show, page) => new Promise((resolve, reject) => {
   request.get(
-    `${tvdbUrls.series}/${show.id}/episodes?page=${page}`,
+    `${urls.series}/${show.id}/episodes?page=${page}`,
     {
       auth: {
         bearer: bearerToken,
@@ -87,7 +92,6 @@ const getEpisodesForShowByPage = (show, page) => new Promise((resolve, reject) =
         } else {
           const returnedEpisodes = JSON.parse(tvdbRes.body).data;
           const results = [];
-
           if (typeof returnedEpisodes !== 'undefined') {
             for (const episode of returnedEpisodes) {
               if (episode.airedSeason !== 0) {
@@ -156,9 +160,13 @@ export const getEpisodes = shows => new Promise((resolve, reject) => {
           }
           resolve(episodes);
         })
-        .catch(err => reject(err));
+        .catch((err) => {
+          reject(err);
+        });
     })
-    .catch(err => reject(err));
+    .catch((unknownErr) => {
+      reject(unknownErr);
+    });
 });
 
 // BANNER
@@ -170,7 +178,7 @@ export const getBannerUrl = showId => new Promise((resolve, reject) => {
         resolve(res.bannerUrl);
       } else {
         request.get(
-          `${tvdbUrls.series}/${showId}`,
+          `${urls.series}/${showId}`,
           {
             auth: {
               bearer: bearerToken,
